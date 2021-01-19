@@ -1,0 +1,1 @@
+<Project name="oskar_mainboard_firmware"><MagicFolder excludeFiles="*.pnproj;*.pnps;*.bak;*.tmp" excludeFolders="CVS;.svn;.hg;.git" filter="*" name="src" path="src\"><File path="main.c"></File><File path="main.d"></File><File path="main.lst"></File><File path="main.o"></File></MagicFolder><File path="Makefile"></File></Project>

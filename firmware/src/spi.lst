@@ -1,0 +1,306 @@
+GAS LISTING /tmp/cc93CXXh.s 			page 1
+
+
+   1               		.file	"spi.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.stabs	"/home/rando/AHHAA/Oskar_III/oskar_mainboard/firmware/",100,0,2,.Ltext0
+   8               		.stabs	"src/spi.c",100,0,2,.Ltext0
+   9               		.text
+  10               	.Ltext0:
+  11               		.stabs	"gcc2_compiled.",60,0,0,0
+  12               		.stabs	"int:t(0,1)=r(0,1);-32768;32767;",128,0,0,0
+  13               		.stabs	"char:t(0,2)=@s8;r(0,2);0;255;",128,0,0,0
+  14               		.stabs	"long int:t(0,3)=@s32;r(0,3);020000000000;017777777777;",128,0,0,0
+  15               		.stabs	"unsigned int:t(0,4)=r(0,4);0;0177777;",128,0,0,0
+  16               		.stabs	"long unsigned int:t(0,5)=@s32;r(0,5);0;037777777777;",128,0,0,0
+  17               		.stabs	"__int128:t(0,6)=@s128;r(0,6);02000000000000000000000000000000000000000000;0177777777777777
+  18               		.stabs	"__int128 unsigned:t(0,7)=@s128;r(0,7);0;03777777777777777777777777777777777777777777;",128
+  19               		.stabs	"long long int:t(0,8)=@s64;r(0,8);01000000000000000000000;00777777777777777777777;",128,0,0
+  20               		.stabs	"long long unsigned int:t(0,9)=@s64;r(0,9);0;01777777777777777777777;",128,0,0,0
+  21               		.stabs	"short int:t(0,10)=r(0,10);-32768;32767;",128,0,0,0
+  22               		.stabs	"short unsigned int:t(0,11)=r(0,11);0;0177777;",128,0,0,0
+  23               		.stabs	"signed char:t(0,12)=@s8;r(0,12);-128;127;",128,0,0,0
+  24               		.stabs	"unsigned char:t(0,13)=@s8;r(0,13);0;255;",128,0,0,0
+  25               		.stabs	"float:t(0,14)=r(0,1);4;0;",128,0,0,0
+  26               		.stabs	"double:t(0,15)=r(0,1);4;0;",128,0,0,0
+  27               		.stabs	"long double:t(0,16)=r(0,1);4;0;",128,0,0,0
+  28               		.stabs	"short _Fract:t(0,17)=r(0,1);1;0;",128,0,0,0
+  29               		.stabs	"_Fract:t(0,18)=r(0,1);2;0;",128,0,0,0
+  30               		.stabs	"long _Fract:t(0,19)=r(0,1);4;0;",128,0,0,0
+  31               		.stabs	"long long _Fract:t(0,20)=r(0,1);8;0;",128,0,0,0
+  32               		.stabs	"unsigned short _Fract:t(0,21)=r(0,1);1;0;",128,0,0,0
+  33               		.stabs	"unsigned _Fract:t(0,22)=r(0,1);2;0;",128,0,0,0
+  34               		.stabs	"unsigned long _Fract:t(0,23)=r(0,1);4;0;",128,0,0,0
+  35               		.stabs	"unsigned long long _Fract:t(0,24)=r(0,1);8;0;",128,0,0,0
+  36               		.stabs	"_Sat short _Fract:t(0,25)=r(0,1);1;0;",128,0,0,0
+  37               		.stabs	"_Sat _Fract:t(0,26)=r(0,1);2;0;",128,0,0,0
+  38               		.stabs	"_Sat long _Fract:t(0,27)=r(0,1);4;0;",128,0,0,0
+  39               		.stabs	"_Sat long long _Fract:t(0,28)=r(0,1);8;0;",128,0,0,0
+  40               		.stabs	"_Sat unsigned short _Fract:t(0,29)=r(0,1);1;0;",128,0,0,0
+  41               		.stabs	"_Sat unsigned _Fract:t(0,30)=r(0,1);2;0;",128,0,0,0
+  42               		.stabs	"_Sat unsigned long _Fract:t(0,31)=r(0,1);4;0;",128,0,0,0
+  43               		.stabs	"_Sat unsigned long long _Fract:t(0,32)=r(0,1);8;0;",128,0,0,0
+  44               		.stabs	"short _Accum:t(0,33)=r(0,1);2;0;",128,0,0,0
+  45               		.stabs	"_Accum:t(0,34)=r(0,1);4;0;",128,0,0,0
+  46               		.stabs	"long _Accum:t(0,35)=r(0,1);8;0;",128,0,0,0
+  47               		.stabs	"long long _Accum:t(0,36)=r(0,1);8;0;",128,0,0,0
+  48               		.stabs	"unsigned short _Accum:t(0,37)=r(0,1);2;0;",128,0,0,0
+  49               		.stabs	"unsigned _Accum:t(0,38)=r(0,1);4;0;",128,0,0,0
+  50               		.stabs	"unsigned long _Accum:t(0,39)=r(0,1);8;0;",128,0,0,0
+  51               		.stabs	"unsigned long long _Accum:t(0,40)=r(0,1);8;0;",128,0,0,0
+  52               		.stabs	"_Sat short _Accum:t(0,41)=r(0,1);2;0;",128,0,0,0
+  53               		.stabs	"_Sat _Accum:t(0,42)=r(0,1);4;0;",128,0,0,0
+  54               		.stabs	"_Sat long _Accum:t(0,43)=r(0,1);8;0;",128,0,0,0
+  55               		.stabs	"_Sat long long _Accum:t(0,44)=r(0,1);8;0;",128,0,0,0
+  56               		.stabs	"_Sat unsigned short _Accum:t(0,45)=r(0,1);2;0;",128,0,0,0
+  57               		.stabs	"_Sat unsigned _Accum:t(0,46)=r(0,1);4;0;",128,0,0,0
+GAS LISTING /tmp/cc93CXXh.s 			page 2
+
+
+  58               		.stabs	"_Sat unsigned long _Accum:t(0,47)=r(0,1);8;0;",128,0,0,0
+  59               		.stabs	"_Sat unsigned long long _Accum:t(0,48)=r(0,1);8;0;",128,0,0,0
+  60               		.stabs	"void:t(0,49)=(0,49)",128,0,0,0
+  61               		.stabs	"./include/spi.h",130,0,0,0
+  62               		.stabs	"/usr/lib/avr/include/avr/io.h",130,0,0,0
+  63               		.stabs	"/usr/lib/avr/include/avr/sfr_defs.h",130,0,0,0
+  64               		.stabs	"/usr/lib/avr/include/inttypes.h",130,0,0,0
+  65               		.stabs	"/usr/lib/gcc/avr/5.4.0/include/stdint.h",130,0,0,0
+  66               		.stabs	"/usr/lib/avr/include/stdint.h",130,0,0,0
+  67               		.stabs	"int8_t:t(6,1)=(0,12)",128,0,125,0
+  68               		.stabs	"uint8_t:t(6,2)=(0,13)",128,0,126,0
+  69               		.stabs	"int16_t:t(6,3)=(0,1)",128,0,127,0
+  70               		.stabs	"uint16_t:t(6,4)=(0,4)",128,0,128,0
+  71               		.stabs	"int32_t:t(6,5)=(0,3)",128,0,129,0
+  72               		.stabs	"uint32_t:t(6,6)=(0,5)",128,0,130,0
+  73               		.stabs	"int64_t:t(6,7)=(0,8)",128,0,132,0
+  74               		.stabs	"uint64_t:t(6,8)=(0,9)",128,0,133,0
+  75               		.stabs	"intptr_t:t(6,9)=(6,3)",128,0,146,0
+  76               		.stabs	"uintptr_t:t(6,10)=(6,4)",128,0,151,0
+  77               		.stabs	"int_least8_t:t(6,11)=(6,1)",128,0,163,0
+  78               		.stabs	"uint_least8_t:t(6,12)=(6,2)",128,0,168,0
+  79               		.stabs	"int_least16_t:t(6,13)=(6,3)",128,0,173,0
+  80               		.stabs	"uint_least16_t:t(6,14)=(6,4)",128,0,178,0
+  81               		.stabs	"int_least32_t:t(6,15)=(6,5)",128,0,183,0
+  82               		.stabs	"uint_least32_t:t(6,16)=(6,6)",128,0,188,0
+  83               		.stabs	"int_least64_t:t(6,17)=(6,7)",128,0,196,0
+  84               		.stabs	"uint_least64_t:t(6,18)=(6,8)",128,0,203,0
+  85               		.stabs	"int_fast8_t:t(6,19)=(6,1)",128,0,217,0
+  86               		.stabs	"uint_fast8_t:t(6,20)=(6,2)",128,0,222,0
+  87               		.stabs	"int_fast16_t:t(6,21)=(6,3)",128,0,227,0
+  88               		.stabs	"uint_fast16_t:t(6,22)=(6,4)",128,0,232,0
+  89               		.stabs	"int_fast32_t:t(6,23)=(6,5)",128,0,237,0
+  90               		.stabs	"uint_fast32_t:t(6,24)=(6,6)",128,0,242,0
+  91               		.stabs	"int_fast64_t:t(6,25)=(6,7)",128,0,250,0
+  92               		.stabs	"uint_fast64_t:t(6,26)=(6,8)",128,0,257,0
+  93               		.stabs	"intmax_t:t(6,27)=(6,7)",128,0,277,0
+  94               		.stabs	"uintmax_t:t(6,28)=(6,8)",128,0,282,0
+  95               		.stabn	162,0,0,0
+  96               		.stabn	162,0,0,0
+  97               		.stabs	"int_farptr_t:t(4,1)=(6,5)",128,0,77,0
+  98               		.stabs	"uint_farptr_t:t(4,2)=(6,6)",128,0,81,0
+  99               		.stabn	162,0,0,0
+ 100               		.stabn	162,0,0,0
+ 101               		.stabs	"/usr/lib/avr/include/avr/fuse.h",130,0,0,0
+ 102               		.stabs	"__fuse_t:t(7,1)=(7,2)=s3low:(0,13),0,8;high:(0,13),8,8;extended:(0,13),16,8;;",128,0,244,0
+ 103               		.stabn	162,0,0,0
+ 104               		.stabn	162,0,0,0
+ 105               		.stabn	162,0,0,0
+ 106               		.stabs	"SPI_init:F(0,49)",36,0,3,SPI_init
+ 107               	.global	SPI_init
+ 108               		.type	SPI_init, @function
+ 109               	SPI_init:
+ 110               		.stabd	46,0,0
+   1:src/spi.c     **** #include <include/spi.h>
+   2:src/spi.c     **** 
+   3:src/spi.c     **** void SPI_init() {
+ 111               		.stabn	68,0,3,.LM0-.LFBB1
+GAS LISTING /tmp/cc93CXXh.s 			page 3
+
+
+ 112               	.LM0:
+ 113               	.LFBB1:
+ 114               	/* prologue: function */
+ 115               	/* frame size = 0 */
+ 116               	/* stack size = 0 */
+ 117               	.L__stack_usage = 0
+   4:src/spi.c     **** 	DDRB |= (1 << DDB2) | (1 << DDB3) | (1 << DDB4) | (1 << DDB5);
+ 118               		.stabn	68,0,4,.LM1-.LFBB1
+ 119               	.LM1:
+ 120 0000 84B1      		in r24,0x4
+ 121 0002 8C63      		ori r24,lo8(60)
+ 122 0004 84B9      		out 0x4,r24
+   5:src/spi.c     **** 	SPCR|=(1<<SPE)|(1<<MSTR)|(1<<SPR0);
+ 123               		.stabn	68,0,5,.LM2-.LFBB1
+ 124               	.LM2:
+ 125 0006 8CB5      		in r24,0x2c
+ 126 0008 8165      		ori r24,lo8(81)
+ 127 000a 8CBD      		out 0x2c,r24
+   6:src/spi.c     **** 	PORTB |= (1 << PINB2);
+ 128               		.stabn	68,0,6,.LM3-.LFBB1
+ 129               	.LM3:
+ 130 000c 2A9A      		sbi 0x5,2
+ 131 000e 0895      		ret
+ 132               		.size	SPI_init, .-SPI_init
+ 133               	.Lscope1:
+ 134               		.stabs	"",36,0,0,.Lscope1-.LFBB1
+ 135               		.stabd	78,0,0
+ 136               		.stabs	"SPI_txrx:F(6,2)",36,0,9,SPI_txrx
+ 137               		.stabs	"data:P(6,2)",64,0,9,24
+ 138               	.global	SPI_txrx
+ 139               		.type	SPI_txrx, @function
+ 140               	SPI_txrx:
+ 141               		.stabd	46,0,0
+   7:src/spi.c     **** }
+   8:src/spi.c     **** 
+   9:src/spi.c     **** uint8_t SPI_txrx(uint8_t data) {
+ 142               		.stabn	68,0,9,.LM4-.LFBB2
+ 143               	.LM4:
+ 144               	.LFBB2:
+ 145               	/* prologue: function */
+ 146               	/* frame size = 0 */
+ 147               	/* stack size = 0 */
+ 148               	.L__stack_usage = 0
+  10:src/spi.c     ****     PORTB &= ~(1 << PINB2);
+ 149               		.stabn	68,0,10,.LM5-.LFBB2
+ 150               	.LM5:
+ 151 0010 2A98      		cbi 0x5,2
+  11:src/spi.c     **** 	SPDR = data;
+ 152               		.stabn	68,0,11,.LM6-.LFBB2
+ 153               	.LM6:
+ 154 0012 8EBD      		out 0x2e,r24
+ 155               	.L3:
+  12:src/spi.c     **** 	while(!(SPSR & (1<<SPIF) ));
+ 156               		.stabn	68,0,12,.LM7-.LFBB2
+ 157               	.LM7:
+ 158 0014 0DB4      		in __tmp_reg__,0x2d
+ 159 0016 07FE      		sbrs __tmp_reg__,7
+GAS LISTING /tmp/cc93CXXh.s 			page 4
+
+
+ 160 0018 00C0      		rjmp .L3
+  13:src/spi.c     ****     PORTB |= (1 << PINB2);
+ 161               		.stabn	68,0,13,.LM8-.LFBB2
+ 162               	.LM8:
+ 163 001a 2A9A      		sbi 0x5,2
+  14:src/spi.c     **** 	return(SPDR);
+ 164               		.stabn	68,0,14,.LM9-.LFBB2
+ 165               	.LM9:
+ 166 001c 8EB5      		in r24,0x2e
+  15:src/spi.c     **** }
+ 167               		.stabn	68,0,15,.LM10-.LFBB2
+ 168               	.LM10:
+ 169 001e 0895      		ret
+ 170               		.size	SPI_txrx, .-SPI_txrx
+ 171               	.Lscope2:
+ 172               		.stabs	"",36,0,0,.Lscope2-.LFBB2
+ 173               		.stabd	78,0,0
+ 174               		.stabs	"SPI_unset_cs:F(0,49)",36,0,17,SPI_unset_cs
+ 175               	.global	SPI_unset_cs
+ 176               		.type	SPI_unset_cs, @function
+ 177               	SPI_unset_cs:
+ 178               		.stabd	46,0,0
+  16:src/spi.c     **** 
+  17:src/spi.c     **** void SPI_unset_cs() {
+ 179               		.stabn	68,0,17,.LM11-.LFBB3
+ 180               	.LM11:
+ 181               	.LFBB3:
+ 182               	/* prologue: function */
+ 183               	/* frame size = 0 */
+ 184               	/* stack size = 0 */
+ 185               	.L__stack_usage = 0
+  18:src/spi.c     ****     PORTB &= ~(1 << PINB2);
+ 186               		.stabn	68,0,18,.LM12-.LFBB3
+ 187               	.LM12:
+ 188 0020 2A98      		cbi 0x5,2
+ 189 0022 0895      		ret
+ 190               		.size	SPI_unset_cs, .-SPI_unset_cs
+ 191               	.Lscope3:
+ 192               		.stabs	"",36,0,0,.Lscope3-.LFBB3
+ 193               		.stabd	78,0,0
+ 194               		.stabs	"SPI_set_cs:F(0,49)",36,0,21,SPI_set_cs
+ 195               	.global	SPI_set_cs
+ 196               		.type	SPI_set_cs, @function
+ 197               	SPI_set_cs:
+ 198               		.stabd	46,0,0
+  19:src/spi.c     **** }
+  20:src/spi.c     **** 
+  21:src/spi.c     **** void SPI_set_cs(){
+ 199               		.stabn	68,0,21,.LM13-.LFBB4
+ 200               	.LM13:
+ 201               	.LFBB4:
+ 202               	/* prologue: function */
+ 203               	/* frame size = 0 */
+ 204               	/* stack size = 0 */
+ 205               	.L__stack_usage = 0
+  22:src/spi.c     ****     PORTB |= (1 << PINB2);
+ 206               		.stabn	68,0,22,.LM14-.LFBB4
+GAS LISTING /tmp/cc93CXXh.s 			page 5
+
+
+ 207               	.LM14:
+ 208 0024 2A9A      		sbi 0x5,2
+ 209 0026 0895      		ret
+ 210               		.size	SPI_set_cs, .-SPI_set_cs
+ 211               	.Lscope4:
+ 212               		.stabs	"",36,0,0,.Lscope4-.LFBB4
+ 213               		.stabd	78,0,0
+ 214               		.stabs	"SPI_send:F(0,49)",36,0,25,SPI_send
+ 215               		.stabs	"data:P(6,2)",64,0,25,24
+ 216               	.global	SPI_send
+ 217               		.type	SPI_send, @function
+ 218               	SPI_send:
+ 219               		.stabd	46,0,0
+  23:src/spi.c     **** }
+  24:src/spi.c     **** 
+  25:src/spi.c     **** void SPI_send(uint8_t data) {
+ 220               		.stabn	68,0,25,.LM15-.LFBB5
+ 221               	.LM15:
+ 222               	.LFBB5:
+ 223               	/* prologue: function */
+ 224               	/* frame size = 0 */
+ 225               	/* stack size = 0 */
+ 226               	.L__stack_usage = 0
+  26:src/spi.c     **** 	SPDR = data;
+ 227               		.stabn	68,0,26,.LM16-.LFBB5
+ 228               	.LM16:
+ 229 0028 8EBD      		out 0x2e,r24
+ 230               	.L9:
+  27:src/spi.c     **** 	while(!(SPSR & (1<<SPIF) ));
+ 231               		.stabn	68,0,27,.LM17-.LFBB5
+ 232               	.LM17:
+ 233 002a 0DB4      		in __tmp_reg__,0x2d
+ 234 002c 07FE      		sbrs __tmp_reg__,7
+ 235 002e 00C0      		rjmp .L9
+ 236               	/* epilogue start */
+  28:src/spi.c     **** }
+ 237               		.stabn	68,0,28,.LM18-.LFBB5
+ 238               	.LM18:
+ 239 0030 0895      		ret
+ 240               		.size	SPI_send, .-SPI_send
+ 241               	.Lscope5:
+ 242               		.stabs	"",36,0,0,.Lscope5-.LFBB5
+ 243               		.stabd	78,0,0
+ 244               		.stabs	"",100,0,0,.Letext0
+ 245               	.Letext0:
+ 246               		.ident	"GCC: (GNU) 5.4.0"
+GAS LISTING /tmp/cc93CXXh.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 spi.c
+     /tmp/cc93CXXh.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cc93CXXh.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cc93CXXh.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cc93CXXh.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cc93CXXh.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cc93CXXh.s:109    .text:0000000000000000 SPI_init
+     /tmp/cc93CXXh.s:140    .text:0000000000000010 SPI_txrx
+     /tmp/cc93CXXh.s:177    .text:0000000000000020 SPI_unset_cs
+     /tmp/cc93CXXh.s:197    .text:0000000000000024 SPI_set_cs
+     /tmp/cc93CXXh.s:218    .text:0000000000000028 SPI_send
+
+NO UNDEFINED SYMBOLS

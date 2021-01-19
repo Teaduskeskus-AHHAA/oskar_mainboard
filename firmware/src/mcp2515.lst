@@ -1,0 +1,761 @@
+GAS LISTING /tmp/ccsX97sh.s 			page 1
+
+
+   1               		.file	"mcp2515.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.stabs	"/home/rando/AHHAA/Oskar_III/oskar_mainboard/firmware/",100,0,2,.Ltext0
+   8               		.stabs	"src/mcp2515.c",100,0,2,.Ltext0
+   9               		.text
+  10               	.Ltext0:
+  11               		.stabs	"gcc2_compiled.",60,0,0,0
+  12               		.stabs	"int:t(0,1)=r(0,1);-32768;32767;",128,0,0,0
+  13               		.stabs	"char:t(0,2)=@s8;r(0,2);0;255;",128,0,0,0
+  14               		.stabs	"long int:t(0,3)=@s32;r(0,3);020000000000;017777777777;",128,0,0,0
+  15               		.stabs	"unsigned int:t(0,4)=r(0,4);0;0177777;",128,0,0,0
+  16               		.stabs	"long unsigned int:t(0,5)=@s32;r(0,5);0;037777777777;",128,0,0,0
+  17               		.stabs	"__int128:t(0,6)=@s128;r(0,6);02000000000000000000000000000000000000000000;0177777777777777
+  18               		.stabs	"__int128 unsigned:t(0,7)=@s128;r(0,7);0;03777777777777777777777777777777777777777777;",128
+  19               		.stabs	"long long int:t(0,8)=@s64;r(0,8);01000000000000000000000;00777777777777777777777;",128,0,0
+  20               		.stabs	"long long unsigned int:t(0,9)=@s64;r(0,9);0;01777777777777777777777;",128,0,0,0
+  21               		.stabs	"short int:t(0,10)=r(0,10);-32768;32767;",128,0,0,0
+  22               		.stabs	"short unsigned int:t(0,11)=r(0,11);0;0177777;",128,0,0,0
+  23               		.stabs	"signed char:t(0,12)=@s8;r(0,12);-128;127;",128,0,0,0
+  24               		.stabs	"unsigned char:t(0,13)=@s8;r(0,13);0;255;",128,0,0,0
+  25               		.stabs	"float:t(0,14)=r(0,1);4;0;",128,0,0,0
+  26               		.stabs	"double:t(0,15)=r(0,1);4;0;",128,0,0,0
+  27               		.stabs	"long double:t(0,16)=r(0,1);4;0;",128,0,0,0
+  28               		.stabs	"short _Fract:t(0,17)=r(0,1);1;0;",128,0,0,0
+  29               		.stabs	"_Fract:t(0,18)=r(0,1);2;0;",128,0,0,0
+  30               		.stabs	"long _Fract:t(0,19)=r(0,1);4;0;",128,0,0,0
+  31               		.stabs	"long long _Fract:t(0,20)=r(0,1);8;0;",128,0,0,0
+  32               		.stabs	"unsigned short _Fract:t(0,21)=r(0,1);1;0;",128,0,0,0
+  33               		.stabs	"unsigned _Fract:t(0,22)=r(0,1);2;0;",128,0,0,0
+  34               		.stabs	"unsigned long _Fract:t(0,23)=r(0,1);4;0;",128,0,0,0
+  35               		.stabs	"unsigned long long _Fract:t(0,24)=r(0,1);8;0;",128,0,0,0
+  36               		.stabs	"_Sat short _Fract:t(0,25)=r(0,1);1;0;",128,0,0,0
+  37               		.stabs	"_Sat _Fract:t(0,26)=r(0,1);2;0;",128,0,0,0
+  38               		.stabs	"_Sat long _Fract:t(0,27)=r(0,1);4;0;",128,0,0,0
+  39               		.stabs	"_Sat long long _Fract:t(0,28)=r(0,1);8;0;",128,0,0,0
+  40               		.stabs	"_Sat unsigned short _Fract:t(0,29)=r(0,1);1;0;",128,0,0,0
+  41               		.stabs	"_Sat unsigned _Fract:t(0,30)=r(0,1);2;0;",128,0,0,0
+  42               		.stabs	"_Sat unsigned long _Fract:t(0,31)=r(0,1);4;0;",128,0,0,0
+  43               		.stabs	"_Sat unsigned long long _Fract:t(0,32)=r(0,1);8;0;",128,0,0,0
+  44               		.stabs	"short _Accum:t(0,33)=r(0,1);2;0;",128,0,0,0
+  45               		.stabs	"_Accum:t(0,34)=r(0,1);4;0;",128,0,0,0
+  46               		.stabs	"long _Accum:t(0,35)=r(0,1);8;0;",128,0,0,0
+  47               		.stabs	"long long _Accum:t(0,36)=r(0,1);8;0;",128,0,0,0
+  48               		.stabs	"unsigned short _Accum:t(0,37)=r(0,1);2;0;",128,0,0,0
+  49               		.stabs	"unsigned _Accum:t(0,38)=r(0,1);4;0;",128,0,0,0
+  50               		.stabs	"unsigned long _Accum:t(0,39)=r(0,1);8;0;",128,0,0,0
+  51               		.stabs	"unsigned long long _Accum:t(0,40)=r(0,1);8;0;",128,0,0,0
+  52               		.stabs	"_Sat short _Accum:t(0,41)=r(0,1);2;0;",128,0,0,0
+  53               		.stabs	"_Sat _Accum:t(0,42)=r(0,1);4;0;",128,0,0,0
+  54               		.stabs	"_Sat long _Accum:t(0,43)=r(0,1);8;0;",128,0,0,0
+  55               		.stabs	"_Sat long long _Accum:t(0,44)=r(0,1);8;0;",128,0,0,0
+  56               		.stabs	"_Sat unsigned short _Accum:t(0,45)=r(0,1);2;0;",128,0,0,0
+  57               		.stabs	"_Sat unsigned _Accum:t(0,46)=r(0,1);4;0;",128,0,0,0
+GAS LISTING /tmp/ccsX97sh.s 			page 2
+
+
+  58               		.stabs	"_Sat unsigned long _Accum:t(0,47)=r(0,1);8;0;",128,0,0,0
+  59               		.stabs	"_Sat unsigned long long _Accum:t(0,48)=r(0,1);8;0;",128,0,0,0
+  60               		.stabs	"void:t(0,49)=(0,49)",128,0,0,0
+  61               		.stabs	"./include/mcp2515.h",130,0,0,0
+  62               		.stabs	"/usr/lib/gcc/avr/5.4.0/include/stdint.h",130,0,0,0
+  63               		.stabs	"/usr/lib/avr/include/stdint.h",130,0,0,0
+  64               		.stabs	"int8_t:t(3,1)=(0,12)",128,0,125,0
+  65               		.stabs	"uint8_t:t(3,2)=(0,13)",128,0,126,0
+  66               		.stabs	"int16_t:t(3,3)=(0,1)",128,0,127,0
+  67               		.stabs	"uint16_t:t(3,4)=(0,4)",128,0,128,0
+  68               		.stabs	"int32_t:t(3,5)=(0,3)",128,0,129,0
+  69               		.stabs	"uint32_t:t(3,6)=(0,5)",128,0,130,0
+  70               		.stabs	"int64_t:t(3,7)=(0,8)",128,0,132,0
+  71               		.stabs	"uint64_t:t(3,8)=(0,9)",128,0,133,0
+  72               		.stabs	"intptr_t:t(3,9)=(3,3)",128,0,146,0
+  73               		.stabs	"uintptr_t:t(3,10)=(3,4)",128,0,151,0
+  74               		.stabs	"int_least8_t:t(3,11)=(3,1)",128,0,163,0
+  75               		.stabs	"uint_least8_t:t(3,12)=(3,2)",128,0,168,0
+  76               		.stabs	"int_least16_t:t(3,13)=(3,3)",128,0,173,0
+  77               		.stabs	"uint_least16_t:t(3,14)=(3,4)",128,0,178,0
+  78               		.stabs	"int_least32_t:t(3,15)=(3,5)",128,0,183,0
+  79               		.stabs	"uint_least32_t:t(3,16)=(3,6)",128,0,188,0
+  80               		.stabs	"int_least64_t:t(3,17)=(3,7)",128,0,196,0
+  81               		.stabs	"uint_least64_t:t(3,18)=(3,8)",128,0,203,0
+  82               		.stabs	"int_fast8_t:t(3,19)=(3,1)",128,0,217,0
+  83               		.stabs	"uint_fast8_t:t(3,20)=(3,2)",128,0,222,0
+  84               		.stabs	"int_fast16_t:t(3,21)=(3,3)",128,0,227,0
+  85               		.stabs	"uint_fast16_t:t(3,22)=(3,4)",128,0,232,0
+  86               		.stabs	"int_fast32_t:t(3,23)=(3,5)",128,0,237,0
+  87               		.stabs	"uint_fast32_t:t(3,24)=(3,6)",128,0,242,0
+  88               		.stabs	"int_fast64_t:t(3,25)=(3,7)",128,0,250,0
+  89               		.stabs	"uint_fast64_t:t(3,26)=(3,8)",128,0,257,0
+  90               		.stabs	"intmax_t:t(3,27)=(3,7)",128,0,277,0
+  91               		.stabs	"uintmax_t:t(3,28)=(3,8)",128,0,282,0
+  92               		.stabn	162,0,0,0
+  93               		.stabn	162,0,0,0
+  94               		.stabs	"can_frame_t:t(1,1)=(1,2)=s11SID:(3,4),0,16;header:(1,3)=s1rtr:(0,4),0,1;len:(0,4),1,4;;,16
+  95               		.stabn	162,0,0,0
+  96               		.stabs	"./include/spi.h",130,0,0,0
+  97               		.stabs	"/usr/lib/avr/include/avr/io.h",130,0,0,0
+  98               		.stabs	"/usr/lib/avr/include/avr/sfr_defs.h",130,0,0,0
+  99               		.stabs	"/usr/lib/avr/include/inttypes.h",130,0,0,0
+ 100               		.stabs	"int_farptr_t:t(7,1)=(3,5)",128,0,77,0
+ 101               		.stabs	"uint_farptr_t:t(7,2)=(3,6)",128,0,81,0
+ 102               		.stabn	162,0,0,0
+ 103               		.stabn	162,0,0,0
+ 104               		.stabs	"/usr/lib/avr/include/avr/fuse.h",130,0,0,0
+ 105               		.stabs	"__fuse_t:t(8,1)=(8,2)=s3low:(0,13),0,8;high:(0,13),8,8;extended:(0,13),16,8;;",128,0,244,0
+ 106               		.stabn	162,0,0,0
+ 107               		.stabn	162,0,0,0
+ 108               		.stabn	162,0,0,0
+ 109               		.stabs	"mcp2515_set_mode:F(0,49)",36,0,4,mcp2515_set_mode
+ 110               		.stabs	"mode:P(3,2)",64,0,4,28
+ 111               	.global	mcp2515_set_mode
+ 112               		.type	mcp2515_set_mode, @function
+ 113               	mcp2515_set_mode:
+ 114               		.stabd	46,0,0
+GAS LISTING /tmp/ccsX97sh.s 			page 3
+
+
+   1:src/mcp2515.c **** #include <include/mcp2515.h>
+   2:src/mcp2515.c **** #include <include/spi.h>
+   3:src/mcp2515.c **** 
+   4:src/mcp2515.c **** void mcp2515_set_mode(uint8_t mode) {
+ 115               		.stabn	68,0,4,.LM0-.LFBB1
+ 116               	.LM0:
+ 117               	.LFBB1:
+ 118 0000 CF93      		push r28
+ 119               	/* prologue: function */
+ 120               	/* frame size = 0 */
+ 121               	/* stack size = 1 */
+ 122               	.L__stack_usage = 1
+ 123 0002 C82F      		mov r28,r24
+   5:src/mcp2515.c ****     SPI_unset_cs();
+ 124               		.stabn	68,0,5,.LM1-.LFBB1
+ 125               	.LM1:
+ 126 0004 0E94 0000 		call SPI_unset_cs
+   6:src/mcp2515.c ****     SPI_send(BIT_MODIFY);
+ 127               		.stabn	68,0,6,.LM2-.LFBB1
+ 128               	.LM2:
+ 129 0008 85E0      		ldi r24,lo8(5)
+ 130 000a 0E94 0000 		call SPI_send
+   7:src/mcp2515.c ****     SPI_send(CANCTRL);
+ 131               		.stabn	68,0,7,.LM3-.LFBB1
+ 132               	.LM3:
+ 133 000e 8FE0      		ldi r24,lo8(15)
+ 134 0010 0E94 0000 		call SPI_send
+   8:src/mcp2515.c ****     SPI_send(REQOP_MASK);
+ 135               		.stabn	68,0,8,.LM4-.LFBB1
+ 136               	.LM4:
+ 137 0014 80EE      		ldi r24,lo8(-32)
+ 138 0016 0E94 0000 		call SPI_send
+   9:src/mcp2515.c ****     SPI_send((mode << REQOP_OFFSET));
+ 139               		.stabn	68,0,9,.LM5-.LFBB1
+ 140               	.LM5:
+ 141 001a 8C2F      		mov r24,r28
+ 142 001c 8295      		swap r24
+ 143 001e 880F      		lsl r24
+ 144 0020 807E      		andi r24,lo8(-32)
+ 145 0022 0E94 0000 		call SPI_send
+ 146               	/* epilogue start */
+  10:src/mcp2515.c ****     SPI_set_cs();    
+  11:src/mcp2515.c **** }
+ 147               		.stabn	68,0,11,.LM6-.LFBB1
+ 148               	.LM6:
+ 149 0026 CF91      		pop r28
+  10:src/mcp2515.c ****     SPI_set_cs();    
+ 150               		.stabn	68,0,10,.LM7-.LFBB1
+ 151               	.LM7:
+ 152 0028 0C94 0000 		jmp SPI_set_cs
+ 153               		.size	mcp2515_set_mode, .-mcp2515_set_mode
+ 154               	.Lscope1:
+ 155               		.stabs	"",36,0,0,.Lscope1-.LFBB1
+ 156               		.stabd	78,0,0
+ 157               		.stabs	"mcp2515_enable_clkout:F(0,49)",36,0,13,mcp2515_enable_clkout
+ 158               	.global	mcp2515_enable_clkout
+ 159               		.type	mcp2515_enable_clkout, @function
+GAS LISTING /tmp/ccsX97sh.s 			page 4
+
+
+ 160               	mcp2515_enable_clkout:
+ 161               		.stabd	46,0,0
+  12:src/mcp2515.c **** 
+  13:src/mcp2515.c **** void mcp2515_enable_clkout() {
+ 162               		.stabn	68,0,13,.LM8-.LFBB2
+ 163               	.LM8:
+ 164               	.LFBB2:
+ 165               	/* prologue: function */
+ 166               	/* frame size = 0 */
+ 167               	/* stack size = 0 */
+ 168               	.L__stack_usage = 0
+  14:src/mcp2515.c ****     SPI_unset_cs();
+ 169               		.stabn	68,0,14,.LM9-.LFBB2
+ 170               	.LM9:
+ 171 002c 0E94 0000 		call SPI_unset_cs
+  15:src/mcp2515.c ****     SPI_send(BIT_MODIFY);
+ 172               		.stabn	68,0,15,.LM10-.LFBB2
+ 173               	.LM10:
+ 174 0030 85E0      		ldi r24,lo8(5)
+ 175 0032 0E94 0000 		call SPI_send
+  16:src/mcp2515.c ****     SPI_send(CANCTRL);
+ 176               		.stabn	68,0,16,.LM11-.LFBB2
+ 177               	.LM11:
+ 178 0036 8FE0      		ldi r24,lo8(15)
+ 179 0038 0E94 0000 		call SPI_send
+  17:src/mcp2515.c ****     SPI_send(CLKEN);
+ 180               		.stabn	68,0,17,.LM12-.LFBB2
+ 181               	.LM12:
+ 182 003c 84E0      		ldi r24,lo8(4)
+ 183 003e 0E94 0000 		call SPI_send
+  18:src/mcp2515.c ****     SPI_send(CLKEN);
+ 184               		.stabn	68,0,18,.LM13-.LFBB2
+ 185               	.LM13:
+ 186 0042 84E0      		ldi r24,lo8(4)
+ 187 0044 0E94 0000 		call SPI_send
+  19:src/mcp2515.c ****     SPI_set_cs();
+ 188               		.stabn	68,0,19,.LM14-.LFBB2
+ 189               	.LM14:
+ 190 0048 0C94 0000 		jmp SPI_set_cs
+ 191               		.size	mcp2515_enable_clkout, .-mcp2515_enable_clkout
+ 192               	.Lscope2:
+ 193               		.stabs	"",36,0,0,.Lscope2-.LFBB2
+ 194               		.stabd	78,0,0
+ 195               		.stabs	"mcp2515_disable_clkout:F(0,49)",36,0,22,mcp2515_disable_clkout
+ 196               	.global	mcp2515_disable_clkout
+ 197               		.type	mcp2515_disable_clkout, @function
+ 198               	mcp2515_disable_clkout:
+ 199               		.stabd	46,0,0
+  20:src/mcp2515.c **** }
+  21:src/mcp2515.c **** 
+  22:src/mcp2515.c **** void mcp2515_disable_clkout() {
+ 200               		.stabn	68,0,22,.LM15-.LFBB3
+ 201               	.LM15:
+ 202               	.LFBB3:
+ 203               	/* prologue: function */
+ 204               	/* frame size = 0 */
+ 205               	/* stack size = 0 */
+GAS LISTING /tmp/ccsX97sh.s 			page 5
+
+
+ 206               	.L__stack_usage = 0
+  23:src/mcp2515.c ****     SPI_unset_cs();
+ 207               		.stabn	68,0,23,.LM16-.LFBB3
+ 208               	.LM16:
+ 209 004c 0E94 0000 		call SPI_unset_cs
+  24:src/mcp2515.c ****     SPI_send(BIT_MODIFY);
+ 210               		.stabn	68,0,24,.LM17-.LFBB3
+ 211               	.LM17:
+ 212 0050 85E0      		ldi r24,lo8(5)
+ 213 0052 0E94 0000 		call SPI_send
+  25:src/mcp2515.c ****     SPI_send(CANCTRL);
+ 214               		.stabn	68,0,25,.LM18-.LFBB3
+ 215               	.LM18:
+ 216 0056 8FE0      		ldi r24,lo8(15)
+ 217 0058 0E94 0000 		call SPI_send
+  26:src/mcp2515.c ****     SPI_send(CLKEN);
+ 218               		.stabn	68,0,26,.LM19-.LFBB3
+ 219               	.LM19:
+ 220 005c 84E0      		ldi r24,lo8(4)
+ 221 005e 0E94 0000 		call SPI_send
+  27:src/mcp2515.c ****     SPI_send(!CLKEN);
+ 222               		.stabn	68,0,27,.LM20-.LFBB3
+ 223               	.LM20:
+ 224 0062 80E0      		ldi r24,0
+ 225 0064 0E94 0000 		call SPI_send
+  28:src/mcp2515.c ****     SPI_set_cs();
+ 226               		.stabn	68,0,28,.LM21-.LFBB3
+ 227               	.LM21:
+ 228 0068 0C94 0000 		jmp SPI_set_cs
+ 229               		.size	mcp2515_disable_clkout, .-mcp2515_disable_clkout
+ 230               	.Lscope3:
+ 231               		.stabs	"",36,0,0,.Lscope3-.LFBB3
+ 232               		.stabd	78,0,0
+ 233               		.stabs	"mcp2515_set_register:F(0,49)",36,0,31,mcp2515_set_register
+ 234               		.stabs	"reg:P(3,2)",64,0,31,29
+ 235               		.stabs	"data:P(3,2)",64,0,31,28
+ 236               	.global	mcp2515_set_register
+ 237               		.type	mcp2515_set_register, @function
+ 238               	mcp2515_set_register:
+ 239               		.stabd	46,0,0
+  29:src/mcp2515.c **** }
+  30:src/mcp2515.c **** 
+  31:src/mcp2515.c **** void mcp2515_set_register(uint8_t reg, uint8_t data) {
+ 240               		.stabn	68,0,31,.LM22-.LFBB4
+ 241               	.LM22:
+ 242               	.LFBB4:
+ 243 006c CF93      		push r28
+ 244 006e DF93      		push r29
+ 245               	/* prologue: function */
+ 246               	/* frame size = 0 */
+ 247               	/* stack size = 2 */
+ 248               	.L__stack_usage = 2
+ 249 0070 D82F      		mov r29,r24
+ 250 0072 C62F      		mov r28,r22
+  32:src/mcp2515.c ****     SPI_unset_cs();
+ 251               		.stabn	68,0,32,.LM23-.LFBB4
+ 252               	.LM23:
+GAS LISTING /tmp/ccsX97sh.s 			page 6
+
+
+ 253 0074 0E94 0000 		call SPI_unset_cs
+  33:src/mcp2515.c ****     SPI_send(WRITE);
+ 254               		.stabn	68,0,33,.LM24-.LFBB4
+ 255               	.LM24:
+ 256 0078 82E0      		ldi r24,lo8(2)
+ 257 007a 0E94 0000 		call SPI_send
+  34:src/mcp2515.c ****     SPI_send(reg);
+ 258               		.stabn	68,0,34,.LM25-.LFBB4
+ 259               	.LM25:
+ 260 007e 8D2F      		mov r24,r29
+ 261 0080 0E94 0000 		call SPI_send
+  35:src/mcp2515.c ****     SPI_send(data);
+ 262               		.stabn	68,0,35,.LM26-.LFBB4
+ 263               	.LM26:
+ 264 0084 8C2F      		mov r24,r28
+ 265 0086 0E94 0000 		call SPI_send
+ 266               	/* epilogue start */
+  36:src/mcp2515.c ****     SPI_set_cs();
+  37:src/mcp2515.c **** }
+ 267               		.stabn	68,0,37,.LM27-.LFBB4
+ 268               	.LM27:
+ 269 008a DF91      		pop r29
+ 270 008c CF91      		pop r28
+  36:src/mcp2515.c ****     SPI_set_cs();
+ 271               		.stabn	68,0,36,.LM28-.LFBB4
+ 272               	.LM28:
+ 273 008e 0C94 0000 		jmp SPI_set_cs
+ 274               		.size	mcp2515_set_register, .-mcp2515_set_register
+ 275               	.Lscope4:
+ 276               		.stabs	"",36,0,0,.Lscope4-.LFBB4
+ 277               		.stabd	78,0,0
+ 278               		.stabs	"mcp2515_read_register:F(3,2)",36,0,39,mcp2515_read_register
+ 279               		.stabs	"reg:P(3,2)",64,0,39,28
+ 280               	.global	mcp2515_read_register
+ 281               		.type	mcp2515_read_register, @function
+ 282               	mcp2515_read_register:
+ 283               		.stabd	46,0,0
+  38:src/mcp2515.c **** 
+  39:src/mcp2515.c **** uint8_t mcp2515_read_register(uint8_t reg) {
+ 284               		.stabn	68,0,39,.LM29-.LFBB5
+ 285               	.LM29:
+ 286               	.LFBB5:
+ 287 0092 CF93      		push r28
+ 288               	/* prologue: function */
+ 289               	/* frame size = 0 */
+ 290               	/* stack size = 1 */
+ 291               	.L__stack_usage = 1
+ 292 0094 C82F      		mov r28,r24
+  40:src/mcp2515.c ****     SPI_unset_cs();
+ 293               		.stabn	68,0,40,.LM30-.LFBB5
+ 294               	.LM30:
+ 295 0096 0E94 0000 		call SPI_unset_cs
+  41:src/mcp2515.c ****     SPI_send(READ);
+ 296               		.stabn	68,0,41,.LM31-.LFBB5
+ 297               	.LM31:
+ 298 009a 83E0      		ldi r24,lo8(3)
+ 299 009c 0E94 0000 		call SPI_send
+GAS LISTING /tmp/ccsX97sh.s 			page 7
+
+
+  42:src/mcp2515.c ****     SPI_send(reg);
+ 300               		.stabn	68,0,42,.LM32-.LFBB5
+ 301               	.LM32:
+ 302 00a0 8C2F      		mov r24,r28
+ 303 00a2 0E94 0000 		call SPI_send
+  43:src/mcp2515.c ****     SPI_send(0x00);
+ 304               		.stabn	68,0,43,.LM33-.LFBB5
+ 305               	.LM33:
+ 306 00a6 80E0      		ldi r24,0
+ 307 00a8 0E94 0000 		call SPI_send
+  44:src/mcp2515.c ****     SPI_set_cs();
+ 308               		.stabn	68,0,44,.LM34-.LFBB5
+ 309               	.LM34:
+ 310 00ac 0E94 0000 		call SPI_set_cs
+  45:src/mcp2515.c ****     return SPDR;
+ 311               		.stabn	68,0,45,.LM35-.LFBB5
+ 312               	.LM35:
+ 313 00b0 8EB5      		in r24,0x2e
+ 314               	/* epilogue start */
+  46:src/mcp2515.c **** }
+ 315               		.stabn	68,0,46,.LM36-.LFBB5
+ 316               	.LM36:
+ 317 00b2 CF91      		pop r28
+ 318 00b4 0895      		ret
+ 319               		.size	mcp2515_read_register, .-mcp2515_read_register
+ 320               	.Lscope5:
+ 321               		.stabs	"",36,0,0,.Lscope5-.LFBB5
+ 322               		.stabd	78,0,0
+ 323               		.stabs	"mcp2515_load_message:F(0,49)",36,0,48,mcp2515_load_message
+ 324               		.stabs	"buffer:P(3,2)",64,0,48,28
+ 325               		.stabs	"frame:P(0,50)=*(1,1)",64,0,48,14
+ 326               	.global	mcp2515_load_message
+ 327               		.type	mcp2515_load_message, @function
+ 328               	mcp2515_load_message:
+ 329               		.stabd	46,0,0
+  47:src/mcp2515.c **** 
+  48:src/mcp2515.c **** void mcp2515_load_message(uint8_t buffer, can_frame_t* frame) {
+ 330               		.stabn	68,0,48,.LM37-.LFBB6
+ 331               	.LM37:
+ 332               	.LFBB6:
+ 333 00b6 EF92      		push r14
+ 334 00b8 FF92      		push r15
+ 335 00ba 0F93      		push r16
+ 336 00bc 1F93      		push r17
+ 337 00be CF93      		push r28
+ 338 00c0 DF93      		push r29
+ 339               	/* prologue: function */
+ 340               	/* frame size = 0 */
+ 341               	/* stack size = 6 */
+ 342               	.L__stack_usage = 6
+ 343 00c2 C82F      		mov r28,r24
+ 344 00c4 7B01      		movw r14,r22
+  49:src/mcp2515.c ****     SPI_unset_cs();
+ 345               		.stabn	68,0,49,.LM38-.LFBB6
+ 346               	.LM38:
+ 347 00c6 0E94 0000 		call SPI_unset_cs
+  50:src/mcp2515.c ****     SPI_send(LOAD_TX_BUFFER | buffer);
+GAS LISTING /tmp/ccsX97sh.s 			page 8
+
+
+ 348               		.stabn	68,0,50,.LM39-.LFBB6
+ 349               	.LM39:
+ 350 00ca 8C2F      		mov r24,r28
+ 351 00cc 8064      		ori r24,lo8(64)
+ 352 00ce 0E94 0000 		call SPI_send
+  51:src/mcp2515.c ****     SPI_send((frame->SID >> 3));
+ 353               		.stabn	68,0,51,.LM40-.LFBB6
+ 354               	.LM40:
+ 355 00d2 F701      		movw r30,r14
+ 356 00d4 8081      		ld r24,Z
+ 357 00d6 9181      		ldd r25,Z+1
+ 358 00d8 9695      		lsr r25
+ 359 00da 8795      		ror r24
+ 360 00dc 9695      		lsr r25
+ 361 00de 8795      		ror r24
+ 362 00e0 9695      		lsr r25
+ 363 00e2 8795      		ror r24
+ 364 00e4 0E94 0000 		call SPI_send
+  52:src/mcp2515.c ****     SPI_send((frame->SID << 5));
+ 365               		.stabn	68,0,52,.LM41-.LFBB6
+ 366               	.LM41:
+ 367 00e8 F701      		movw r30,r14
+ 368 00ea 8081      		ld r24,Z
+ 369 00ec 8295      		swap r24
+ 370 00ee 880F      		lsl r24
+ 371 00f0 807E      		andi r24,lo8(-32)
+ 372 00f2 0E94 0000 		call SPI_send
+  53:src/mcp2515.c ****     SPI_send(0);
+ 373               		.stabn	68,0,53,.LM42-.LFBB6
+ 374               	.LM42:
+ 375 00f6 80E0      		ldi r24,0
+ 376 00f8 0E94 0000 		call SPI_send
+  54:src/mcp2515.c ****     SPI_send(0);
+ 377               		.stabn	68,0,54,.LM43-.LFBB6
+ 378               	.LM43:
+ 379 00fc 80E0      		ldi r24,0
+ 380 00fe 0E94 0000 		call SPI_send
+  55:src/mcp2515.c ****     
+  56:src/mcp2515.c ****     uint8_t length = frame->header.len & 0x0F;
+ 381               		.stabn	68,0,56,.LM44-.LFBB6
+ 382               	.LM44:
+ 383 0102 F701      		movw r30,r14
+ 384 0104 8281      		ldd r24,Z+2
+ 385 0106 182F      		mov r17,r24
+ 386 0108 1695      		lsr r17
+ 387 010a 1F70      		andi r17,lo8(15)
+  57:src/mcp2515.c ****     if (frame->header.rtr) {
+ 388               		.stabn	68,0,57,.LM45-.LFBB6
+ 389               	.LM45:
+ 390 010c 80FD      		sbrc r24,0
+ 391 010e 00C0      		rjmp .L14
+ 392               	.LBB2:
+  58:src/mcp2515.c ****         SPI_send((1<<RTR) | length);
+  59:src/mcp2515.c ****     }
+  60:src/mcp2515.c ****     else {
+  61:src/mcp2515.c ****       SPI_send(length);       
+ 393               		.stabn	68,0,61,.LM46-.LFBB6
+GAS LISTING /tmp/ccsX97sh.s 			page 9
+
+
+ 394               	.LM46:
+ 395 0110 812F      		mov r24,r17
+ 396 0112 0E94 0000 		call SPI_send
+  62:src/mcp2515.c **** 	  uint8_t i;
+  63:src/mcp2515.c ****       for (i=0; i < length; i++)
+ 397               		.stabn	68,0,63,.LM47-.LFBB6
+ 398               	.LM47:
+ 399 0116 1123      		tst r17
+ 400 0118 01F0      		breq .L8
+ 401 011a E701      		movw r28,r14
+ 402 011c 2396      		adiw r28,3
+ 403 011e 1150      		subi r17,lo8(-(-1))
+ 404 0120 012F      		mov r16,r17
+ 405 0122 10E0      		ldi r17,0
+ 406 0124 0C5F      		subi r16,-4
+ 407 0126 1F4F      		sbci r17,-1
+ 408 0128 0E0D      		add r16,r14
+ 409 012a 1F1D      		adc r17,r15
+ 410               	.L10:
+  64:src/mcp2515.c ****       {
+  65:src/mcp2515.c ****         SPI_send(frame->data[i]);
+ 411               		.stabn	68,0,65,.LM48-.LFBB6
+ 412               	.LM48:
+ 413 012c 8991      		ld r24,Y+
+ 414 012e 0E94 0000 		call SPI_send
+  63:src/mcp2515.c ****       {
+ 415               		.stabn	68,0,63,.LM49-.LFBB6
+ 416               	.LM49:
+ 417 0132 C017      		cp r28,r16
+ 418 0134 D107      		cpc r29,r17
+ 419 0136 01F4      		brne .L10
+ 420               	.L8:
+ 421               	/* epilogue start */
+ 422               	.LBE2:
+  66:src/mcp2515.c ****       }
+  67:src/mcp2515.c ****    }
+  68:src/mcp2515.c **** 
+  69:src/mcp2515.c ****     SPI_set_cs();
+  70:src/mcp2515.c **** 
+  71:src/mcp2515.c **** }
+ 423               		.stabn	68,0,71,.LM50-.LFBB6
+ 424               	.LM50:
+ 425 0138 DF91      		pop r29
+ 426 013a CF91      		pop r28
+ 427 013c 1F91      		pop r17
+ 428 013e 0F91      		pop r16
+ 429 0140 FF90      		pop r15
+ 430 0142 EF90      		pop r14
+  69:src/mcp2515.c **** 
+ 431               		.stabn	68,0,69,.LM51-.LFBB6
+ 432               	.LM51:
+ 433 0144 0C94 0000 		jmp SPI_set_cs
+ 434               	.L14:
+  58:src/mcp2515.c ****     }
+ 435               		.stabn	68,0,58,.LM52-.LFBB6
+ 436               	.LM52:
+ 437 0148 812F      		mov r24,r17
+GAS LISTING /tmp/ccsX97sh.s 			page 10
+
+
+ 438 014a 8064      		ori r24,lo8(64)
+ 439 014c 0E94 0000 		call SPI_send
+ 440               	/* epilogue start */
+ 441               		.stabn	68,0,71,.LM53-.LFBB6
+ 442               	.LM53:
+ 443 0150 DF91      		pop r29
+ 444 0152 CF91      		pop r28
+ 445 0154 1F91      		pop r17
+ 446 0156 0F91      		pop r16
+ 447 0158 FF90      		pop r15
+ 448 015a EF90      		pop r14
+  69:src/mcp2515.c **** 
+ 449               		.stabn	68,0,69,.LM54-.LFBB6
+ 450               	.LM54:
+ 451 015c 0C94 0000 		jmp SPI_set_cs
+ 452               		.size	mcp2515_load_message, .-mcp2515_load_message
+ 453               		.stabs	"length:r(3,2)",64,0,56,17
+ 454               		.stabn	192,0,0,.LFBB6-.LFBB6
+ 455               		.stabn	224,0,0,.Lscope6-.LFBB6
+ 456               	.Lscope6:
+ 457               		.stabs	"",36,0,0,.Lscope6-.LFBB6
+ 458               		.stabd	78,0,0
+ 459               		.stabs	"mcp2515_request_to_send:F(0,49)",36,0,73,mcp2515_request_to_send
+ 460               		.stabs	"buffer:P(3,2)",64,0,73,24
+ 461               	.global	mcp2515_request_to_send
+ 462               		.type	mcp2515_request_to_send, @function
+ 463               	mcp2515_request_to_send:
+ 464               		.stabd	46,0,0
+  72:src/mcp2515.c **** 
+  73:src/mcp2515.c **** void mcp2515_request_to_send(uint8_t buffer) {
+ 465               		.stabn	68,0,73,.LM55-.LFBB7
+ 466               	.LM55:
+ 467               	.LFBB7:
+ 468 0160 CF93      		push r28
+ 469               	/* prologue: function */
+ 470               	/* frame size = 0 */
+ 471               	/* stack size = 1 */
+ 472               	.L__stack_usage = 1
+  74:src/mcp2515.c ****     uint8_t address = (buffer == 0) ? 1 : buffer;
+ 473               		.stabn	68,0,74,.LM56-.LFBB7
+ 474               	.LM56:
+ 475 0162 8823      		tst r24
+ 476 0164 01F0      		breq .L17
+ 477 0166 C82F      		mov r28,r24
+ 478 0168 C068      		ori r28,lo8(-128)
+  75:src/mcp2515.c ****     SPI_unset_cs();
+ 479               		.stabn	68,0,75,.LM57-.LFBB7
+ 480               	.LM57:
+ 481 016a 0E94 0000 		call SPI_unset_cs
+  76:src/mcp2515.c ****     SPI_send(RTS | address);
+ 482               		.stabn	68,0,76,.LM58-.LFBB7
+ 483               	.LM58:
+ 484 016e 8C2F      		mov r24,r28
+ 485 0170 0E94 0000 		call SPI_send
+ 486               	/* epilogue start */
+  77:src/mcp2515.c ****     SPI_set_cs();
+  78:src/mcp2515.c **** }
+GAS LISTING /tmp/ccsX97sh.s 			page 11
+
+
+ 487               		.stabn	68,0,78,.LM59-.LFBB7
+ 488               	.LM59:
+ 489 0174 CF91      		pop r28
+  77:src/mcp2515.c ****     SPI_set_cs();
+ 490               		.stabn	68,0,77,.LM60-.LFBB7
+ 491               	.LM60:
+ 492 0176 0C94 0000 		jmp SPI_set_cs
+ 493               	.L17:
+ 494 017a C1E8      		ldi r28,lo8(-127)
+  75:src/mcp2515.c ****     SPI_send(RTS | address);
+ 495               		.stabn	68,0,75,.LM61-.LFBB7
+ 496               	.LM61:
+ 497 017c 0E94 0000 		call SPI_unset_cs
+  76:src/mcp2515.c ****     SPI_send(RTS | address);
+ 498               		.stabn	68,0,76,.LM62-.LFBB7
+ 499               	.LM62:
+ 500 0180 8C2F      		mov r24,r28
+ 501 0182 0E94 0000 		call SPI_send
+ 502               	/* epilogue start */
+ 503               		.stabn	68,0,78,.LM63-.LFBB7
+ 504               	.LM63:
+ 505 0186 CF91      		pop r28
+  77:src/mcp2515.c ****     SPI_set_cs();
+ 506               		.stabn	68,0,77,.LM64-.LFBB7
+ 507               	.LM64:
+ 508 0188 0C94 0000 		jmp SPI_set_cs
+ 509               		.size	mcp2515_request_to_send, .-mcp2515_request_to_send
+ 510               	.Lscope7:
+ 511               		.stabs	"",36,0,0,.Lscope7-.LFBB7
+ 512               		.stabd	78,0,0
+ 513               		.stabs	"mcp2515_abort_send:F(0,49)",36,0,80,mcp2515_abort_send
+ 514               		.stabs	"buffer:P(3,2)",64,0,80,28
+ 515               	.global	mcp2515_abort_send
+ 516               		.type	mcp2515_abort_send, @function
+ 517               	mcp2515_abort_send:
+ 518               		.stabd	46,0,0
+  79:src/mcp2515.c **** 
+  80:src/mcp2515.c **** void mcp2515_abort_send(uint8_t buffer) {
+ 519               		.stabn	68,0,80,.LM65-.LFBB8
+ 520               	.LM65:
+ 521               	.LFBB8:
+ 522 018c CF93      		push r28
+ 523               	/* prologue: function */
+ 524               	/* frame size = 0 */
+ 525               	/* stack size = 1 */
+ 526               	.L__stack_usage = 1
+ 527 018e C82F      		mov r28,r24
+  81:src/mcp2515.c ****     SPI_unset_cs();
+ 528               		.stabn	68,0,81,.LM66-.LFBB8
+ 529               	.LM66:
+ 530 0190 0E94 0000 		call SPI_unset_cs
+  82:src/mcp2515.c ****     SPI_send(BIT_MODIFY);
+ 531               		.stabn	68,0,82,.LM67-.LFBB8
+ 532               	.LM67:
+ 533 0194 85E0      		ldi r24,lo8(5)
+ 534 0196 0E94 0000 		call SPI_send
+  83:src/mcp2515.c ****     SPI_send(buffer);
+GAS LISTING /tmp/ccsX97sh.s 			page 12
+
+
+ 535               		.stabn	68,0,83,.LM68-.LFBB8
+ 536               	.LM68:
+ 537 019a 8C2F      		mov r24,r28
+ 538 019c 0E94 0000 		call SPI_send
+  84:src/mcp2515.c ****     SPI_send(0x08);
+ 539               		.stabn	68,0,84,.LM69-.LFBB8
+ 540               	.LM69:
+ 541 01a0 88E0      		ldi r24,lo8(8)
+ 542 01a2 0E94 0000 		call SPI_send
+  85:src/mcp2515.c ****     SPI_send(!0x08);
+ 543               		.stabn	68,0,85,.LM70-.LFBB8
+ 544               	.LM70:
+ 545 01a6 80E0      		ldi r24,0
+ 546 01a8 0E94 0000 		call SPI_send
+ 547               	/* epilogue start */
+  86:src/mcp2515.c ****     SPI_set_cs();
+  87:src/mcp2515.c **** }
+ 548               		.stabn	68,0,87,.LM71-.LFBB8
+ 549               	.LM71:
+ 550 01ac CF91      		pop r28
+  86:src/mcp2515.c ****     SPI_set_cs();
+ 551               		.stabn	68,0,86,.LM72-.LFBB8
+ 552               	.LM72:
+ 553 01ae 0C94 0000 		jmp SPI_set_cs
+ 554               		.size	mcp2515_abort_send, .-mcp2515_abort_send
+ 555               	.Lscope8:
+ 556               		.stabs	"",36,0,0,.Lscope8-.LFBB8
+ 557               		.stabd	78,0,0
+ 558               		.stabs	"mcp2515_verify_register:F(3,2)",36,0,89,mcp2515_verify_register
+ 559               		.stabs	"reg:P(3,2)",64,0,89,24
+ 560               		.stabs	"expected:P(3,2)",64,0,89,28
+ 561               	.global	mcp2515_verify_register
+ 562               		.type	mcp2515_verify_register, @function
+ 563               	mcp2515_verify_register:
+ 564               		.stabd	46,0,0
+  88:src/mcp2515.c **** 
+  89:src/mcp2515.c **** uint8_t mcp2515_verify_register(uint8_t reg, uint8_t expected) {
+ 565               		.stabn	68,0,89,.LM73-.LFBB9
+ 566               	.LM73:
+ 567               	.LFBB9:
+ 568 01b2 CF93      		push r28
+ 569               	/* prologue: function */
+ 570               	/* frame size = 0 */
+ 571               	/* stack size = 1 */
+ 572               	.L__stack_usage = 1
+ 573 01b4 C62F      		mov r28,r22
+  90:src/mcp2515.c **** 	uint8_t reading = mcp2515_read_register(reg);
+ 574               		.stabn	68,0,90,.LM74-.LFBB9
+ 575               	.LM74:
+ 576 01b6 0E94 0000 		call mcp2515_read_register
+  91:src/mcp2515.c **** 	return (reading == expected);
+ 577               		.stabn	68,0,91,.LM75-.LFBB9
+ 578               	.LM75:
+ 579 01ba 91E0      		ldi r25,lo8(1)
+ 580 01bc 8C13      		cpse r24,r28
+ 581 01be 90E0      		ldi r25,0
+ 582               	.L20:
+GAS LISTING /tmp/ccsX97sh.s 			page 13
+
+
+  92:src/mcp2515.c **** }
+ 583               		.stabn	68,0,92,.LM76-.LFBB9
+ 584               	.LM76:
+ 585 01c0 892F      		mov r24,r25
+ 586               	/* epilogue start */
+ 587 01c2 CF91      		pop r28
+ 588 01c4 0895      		ret
+ 589               		.size	mcp2515_verify_register, .-mcp2515_verify_register
+ 590               	.Lscope9:
+ 591               		.stabs	"",36,0,0,.Lscope9-.LFBB9
+ 592               		.stabd	78,0,0
+ 593               		.stabs	"",100,0,0,.Letext0
+ 594               	.Letext0:
+ 595               		.ident	"GCC: (GNU) 5.4.0"
+GAS LISTING /tmp/ccsX97sh.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 mcp2515.c
+     /tmp/ccsX97sh.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccsX97sh.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccsX97sh.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccsX97sh.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccsX97sh.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccsX97sh.s:113    .text:0000000000000000 mcp2515_set_mode
+     /tmp/ccsX97sh.s:160    .text:000000000000002c mcp2515_enable_clkout
+     /tmp/ccsX97sh.s:198    .text:000000000000004c mcp2515_disable_clkout
+     /tmp/ccsX97sh.s:238    .text:000000000000006c mcp2515_set_register
+     /tmp/ccsX97sh.s:282    .text:0000000000000092 mcp2515_read_register
+     /tmp/ccsX97sh.s:328    .text:00000000000000b6 mcp2515_load_message
+     /tmp/ccsX97sh.s:463    .text:0000000000000160 mcp2515_request_to_send
+     /tmp/ccsX97sh.s:517    .text:000000000000018c mcp2515_abort_send
+     /tmp/ccsX97sh.s:563    .text:00000000000001b2 mcp2515_verify_register
+
+UNDEFINED SYMBOLS
+SPI_unset_cs
+SPI_send
+SPI_set_cs
