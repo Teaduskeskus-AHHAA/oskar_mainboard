@@ -24,3 +24,12 @@ fp-info-cache
 # Exported BOM files
 *.xml
 *.csv
+
+*.o
+*.lst
+*.lss
+*.hex
+*.elf
+*.eep
+*.map
+.vscode/*

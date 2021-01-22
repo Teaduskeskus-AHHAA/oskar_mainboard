@@ -25,6 +25,22 @@ typedef struct
    uint8_t  data[8];
 } can_frame_t;
 
+typedef enum {
+   CAN_ERROR_NONE           = 0,
+   CAN_ERROR_ALLTXBUSY      = 1,
+   CAN_ERROR_UNKNOWN_FLOW   = 2,
+   CAN_ERROR_ABORT          = 3,
+   CAN_ERROR_LOSTARBITATION = 4,
+   CAN_ERROR_TXERR          = 5
+} CAN_error;
+
+
+// Config register parameters
+
+/* 16 MHz 1Mbps */
+#define CNF1_16MHZ_1MBPS 0x00
+#define CNF2_16MHZ_1MBPS 0x91
+#define CNF3_16MHZ_1MBPS 0x01
 
 // CANCTRL.REQOP bits to define operational modes
 #define REQOP_NORMAL 0x00
@@ -264,23 +280,22 @@ typedef struct
 // Error flag
 #define EFLG 0x2D
 
+#define ABTF 0x40
+#define MLOA 0x20
+#define TXERR 0x10
 
 
-
-// Changes the operation mode by setting CANCTRL.REQOP bits
-void mcp2515_set_mode(uint8_t mode);
+uint8_t mcp2515_init(uint8_t freqMHz, long baud);
 
 //enables or disables the CKLOUT pin
 void mcp2515_enable_clkout();
 void mcp2515_disable_clkout();
 
-void mcp2515_set_register(uint8_t reg, uint8_t data);
 uint8_t mcp2515_read_register(uint8_t reg);
 void mcp2515_load_message(uint8_t buffer, can_frame_t* frame);
 void mcp2515_request_to_send(uint8_t buffer);
 void mcp2515_abort_send(uint8_t buffer);
-
-uint8_t mcp2515_verify_register(uint8_t reg, uint8_t expected);
+CAN_error mcp2515_send(can_frame_t* frame);
 
 
 #endif
