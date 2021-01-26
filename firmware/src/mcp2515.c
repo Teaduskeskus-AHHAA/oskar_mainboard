@@ -54,8 +54,11 @@ uint8_t mcp2515_init(uint8_t freq_MHz, long baud) {
 	mcp2515_set_register(CNF2,cnf2);
 	mcp2515_set_register(CNF3,cnf3);
     uint8_t result = mcp2515_verify_register(CNF1,cnf1) && mcp2515_verify_register(CNF2,cnf2) && mcp2515_verify_register(CNF3,cnf3);
+    mcp2515_set_register(CANINTE,(1 << RX0IE) | (1 << RX1IE));
+    mcp2515_set_register(BFPCTRL,(1 << B0BFM) | (1 << B1BFM) | (1 << B0BFE) | (1 << B1BFE));
     mcp2515_set_mode(REQOP_NORMAL);
     while(!mcp2515_verify_register(CANSTAT,0x00)){};
+
     return result;
 }
 
@@ -79,6 +82,16 @@ void mcp2515_disable_clkout() {
     SPI_set_cs();
 }
 
+void mcp2515_read_registers(uint8_t start, uint8_t target[], uint8_t len) {
+    SPI_unset_cs();
+    SPI_send(READ);
+    SPI_send(start);
+    for(int i = 0; i < len; i++) {
+        SPI_send(0x00);
+        target[i] = SPDR;
+    }
+    SPI_set_cs();
+}
 
 uint8_t mcp2515_read_register(uint8_t reg) {
     SPI_unset_cs();
@@ -189,4 +202,31 @@ CAN_error mcp2515_send(can_frame_t* frame) {
     }
 
     return CAN_ERROR_NONE;
+}
+
+
+void mcp2515_read(uint8_t buffer, can_frame_t* frame) {
+    uint8_t metadata[5];
+    if(buffer == 0) {
+        mcp2515_read_registers(RXB0SIDH, metadata, 5);
+        mcp2515_read_registers(RXB0D0,frame->data,8);
+        SPI_unset_cs();
+        SPI_send(BIT_MODIFY);
+        SPI_send(CANINTF);
+        SPI_send(RX0IF);
+        SPI_send(!RX0IF);
+        SPI_set_cs();
+    } else if (buffer == 1) {
+        mcp2515_read_registers(RXB1SIDH, metadata, 5);
+        mcp2515_read_registers(RXB1D0,frame->data,8);
+        SPI_unset_cs();
+        SPI_send(BIT_MODIFY);
+        SPI_send(CANINTF);
+        SPI_send(RX1IF);
+        SPI_send(!RX1IF);
+        SPI_set_cs();
+    }
+    frame->SID = (metadata[0] << 3) | (metadata[1] >> 5);
+    
+    frame->header.len = metadata[4];
 }

@@ -25,6 +25,7 @@ fp-info-cache
 *.xml
 *.csv
 
+*.d
 *.o
 *.lst
 *.lss

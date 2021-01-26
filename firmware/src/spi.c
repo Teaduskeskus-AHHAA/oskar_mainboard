@@ -8,7 +8,7 @@ void SPI_init() {
 }
 
 uint8_t SPI_txrx(uint8_t data) {
-    PORTB &= ~(1 << PINB2);
+  PORTB &= ~(1 << PINB2);
 	SPDR = data;
 	while(!(SPSR & (1<<SPIF) ));
     PORTB |= (1 << PINB2);

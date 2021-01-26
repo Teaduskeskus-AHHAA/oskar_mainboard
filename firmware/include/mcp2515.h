@@ -14,7 +14,7 @@
 typedef struct
 {
    // SID of the frame;
-   uint16_t SID;
+   uint32_t SID;
    // Frame header
    struct
    {
@@ -277,6 +277,9 @@ typedef enum {
 #define CANINTE 0x2B
 #define CANINTF 0x2C
 
+#define RX0IF 0x01
+#define RX1IF 0x02
+
 // Error flag
 #define EFLG 0x2D
 
@@ -292,10 +295,11 @@ void mcp2515_enable_clkout();
 void mcp2515_disable_clkout();
 
 uint8_t mcp2515_read_register(uint8_t reg);
+void mcp2515_read_registers(uint8_t start, uint8_t target[], uint8_t len);
 void mcp2515_load_message(uint8_t buffer, can_frame_t* frame);
 void mcp2515_request_to_send(uint8_t buffer);
 void mcp2515_abort_send(uint8_t buffer);
 CAN_error mcp2515_send(can_frame_t* frame);
-
+void mcp2515_read(uint8_t buffer, can_frame_t* frame);
 
 #endif
