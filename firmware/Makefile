@@ -60,10 +60,10 @@ LDFLAGS = -Wl,-Map=$(TARGET).map,--cref
 #LDFLAGS += -Wl,-u,vfprintf -lprintf_min
 #
 # Floating point printf version (requires -lm below)
-#LDFLAGS +=  -Wl,-u,vfprintf -lprintf_flt
+LDFLAGS +=  -Wl,-u,vfprintf -lprintf_flt
 #
 # -lm = math library
-#LDFLAGS += -lm
+LDFLAGS += -lm
 
 
 

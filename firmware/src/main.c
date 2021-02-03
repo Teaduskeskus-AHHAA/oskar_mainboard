@@ -2,17 +2,22 @@
 #include <avr/interrupt.h>
 #include <include/spi.h>
 #include <include/mcp2515.h>
-#include <include/gyems_x8.h>
+#include <include/gyems.h>
 #define F_CPU 8000000UL
 #include <util/delay.h>
 #include <stdlib.h>
 #include <include/oskar_defs.h>
+#include <math.h>
+#include <string.h>
+#include <stdio.h>
 
 can_frame_t can_frame;
 uint8_t can_frame_ready = 0;
 
-gyems_x8 motor1;
+gyems_motor motor1;
 can_frame_t frm;
+uint8_t motors_ready = 0;
+
 void init_usart() {
     CLKPR = 128;
     CLKPR = 0;
@@ -51,23 +56,34 @@ void stall_can_init_error() {
 }
 
 ISR(PCINT1_vect) {
-	    		PORTB |= (1 << PB0);
-
 	if(!(PINC & (1 << PINC5))) {
 		mcp2515_read(0, &frm);
 	} else if(!(PINC & (1 << PINC4))) {
 		mcp2515_read(1,&frm);
 	}
-	gyems_x8_parse_can(&motor1,&frm);
-
+	gyems_motor_parse_can(&motor1,&frm);
 }
+
 
 int main() {
 
 	/* Define motors */
 
 	motor1.id = 0x141;
-	
+	motor1.operating_mode = 1; //Multiturn
+	motor1.endpoint_speed = 200;
+	motor1.multiturn_angle_range = -5670;
+	motor1.endpoints_found = 0;
+	motor1.endpoint_1_port = &PORTD;
+	motor1.endpoint_2_port = &PORTD;
+	motor1.endpoint_1_pin = 7;
+	motor1.endpoint_2_pin = 5;
+
+	/* Start motor-related IO conf */
+
+	*(motor1.endpoint_1_port-1) &= ~(1 << motor1.endpoint_1_pin);
+	//*(motor1.endpoint_2_port-1) &= ~(1 << motor1.endpoint_2_pin);
+
 	/* Start Board IO conf */
 
 	//B0 - CAN Error led
@@ -105,15 +121,25 @@ int main() {
 	usart_puts("OSKAR\r\n");
 	char buffer[30];
 
-	gyems_x8_request_status(&motor1);
+//	gyems_motor_request_status(&motor1);
+	//gyems_motor_set_speed(&motor1,0);
+  gyems_motor_find_endpoints(&motor1);
+
+	motors_ready = 1;
+	_delay_ms(1000);
+	  gyems_motor_set_multiturn_angle(&motor1,10,5760/2);
 
 	while(1) {
+		if(motors_ready) {
+		//	gyems_motor_request_status(&motor1);
+		}
 
-		//gyems_x8_parse_can(&motor1,frm);
-		utoa(motor1.voltage,buffer,10);
+		//gyems_motor_parse_can(&motor1,frm);
+		ltoa(motor1.multiturn_angle_0,buffer,10);
+		//sprintf(buffer,"%i",motor1.torque_current*3300.0/2048.0);
 		usart_puts(buffer);
-		usart_puts(" V\r\n");
+		usart_puts("\r\n");
 	}
 	
 	return 0;
-}
+}	
