@@ -58,10 +58,20 @@ void stall_can_init_error() {
 ISR(PCINT1_vect) {
 	if(!(PINC & (1 << PINC5))) {
 		mcp2515_read(0, &frm);
+					gyems_motor_parse_can(&motor1, &frm);
+
 	} else if(!(PINC & (1 << PINC4))) {
 		mcp2515_read(1,&frm);
+			gyems_motor_parse_can(&motor1, &frm);
+
+	} else if(!(PINC & (1 << PINC3))) {
+		gyems_motor_set_multiturn_angle(&motor1,10,5760);
+	} else if(!(PINC & (1 << PINC2))) {
+		gyems_motor_set_multiturn_angle(&motor1,10,5760/2);
+	} else if(!(PINC & (1 << PINC1))) {
+		gyems_motor_set_multiturn_angle(&motor1,10,0);
 	}
-	gyems_motor_parse_can(&motor1,&frm);
+
 }
 
 
@@ -72,7 +82,7 @@ int main() {
 	motor1.id = 0x141;
 	motor1.operating_mode = 1; //Multiturn
 	motor1.endpoint_speed = 200;
-	motor1.multiturn_angle_range = -5670;
+	motor1.multiturn_angle_range = -5760;
 	motor1.endpoints_found = 0;
 	motor1.endpoint_1_port = &PORTD;
 	motor1.endpoint_2_port = &PORTD;
@@ -96,7 +106,7 @@ int main() {
 	/* Start Initialize peripheral systems */
 
 	//USART
-	init_usart();
+	//init_usart();
 
 	// Initialize SPI
 	SPI_init();
@@ -111,19 +121,20 @@ int main() {
 		stall_can_init_error();
 	}
 
-	PCMSK1 |= (1 << PCINT12) | (1 << PCINT13);
+	PCMSK1 |= (1 << PCINT9) | (1 << PCINT10 ) | (1 << PCINT11) | (1 << PCINT12) | (1 << PCINT13);
 	PCICR |= (1 << PCIE1);
 	/* End Initialize peripheral systems */
 	_delay_ms(100);
 
 	sei();
 	_delay_ms(500);
-	usart_puts("OSKAR\r\n");
+//	usart_puts("OSKAR\r\n");
 	char buffer[30];
 
 //	gyems_motor_request_status(&motor1);
 	//gyems_motor_set_speed(&motor1,0);
   gyems_motor_find_endpoints(&motor1);
+                 PORTB |= (1 << PB0);
 
 	motors_ready = 1;
 	_delay_ms(1000);
