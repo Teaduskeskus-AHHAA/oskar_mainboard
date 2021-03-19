@@ -21,8 +21,6 @@ char buffer[30];
 
 uint8_t motors_ready = 0;
 
-#define KEY_PIN PINC
-
 void init_usart() {
   CLKPR = 128;
   CLKPR = 0;
@@ -70,38 +68,8 @@ ISR(PCINT1_vect) {
   }
 }
 
-uint8_t key_state; // debounced and inverted key state:
-                   // bit = 1: key pressed
-uint8_t key_press; // key press detect
-
-ISR(TIMER0_COMPA_vect) // every 10ms
-{
-  static uint8_t ct0 = 0xFF, ct1 = 0xFF; // 8 * 2bit counters
-  uint8_t i;
-
-  i = ~KEY_PIN;               // read keys (low active)
-  i ^= key_state;             // key changed ?
-  ct0 = ~(ct0 & i);           // reset or count ct0
-  ct1 = ct0 ^ (ct1 & i);      // reset or count ct1
-  i &= ct0 & ct1;             // count until roll over ?
-  key_state ^= i;             // then toggle debounced state
-  key_press |= key_state & i; // 0->1: key press detect
-}
-
-uint8_t get_key_press(uint8_t key_mask) {
-  cli();                 // read and clear atomic !
-  key_mask &= key_press; // read key(s)
-  key_press ^= key_mask; // clear key(s)
-  sei();
-  return key_mask;
-}
-
 int main() {
-  TCCR0A = 1 << WGM01;                // T0 Mode 2: CTC
-  TCCR0B = 1 << CS02 ^ 1 << CS00;     // divide by 1024
-  OCR0A = F_CPU / 1024.0 * 10e-3 - 1; // 10ms
-  TIMSK0 = 1 << OCIE0A;
-  key_state = ~KEY_PIN; // no action on keypress during reset
+
   /* Define motors */
 
   motor1.id = 0x141;
@@ -141,6 +109,7 @@ int main() {
   PORTB &= ~CAN_RESET_PIN;
   _delay_ms(100);
   PORTB |= CAN_RESET_PIN;
+
   // Initialize CAN Controller or enter hard error state if that fails.
   if (!mcp2515_init(16, 1000000)) {
     stall_can_init_error();
@@ -168,25 +137,6 @@ int main() {
   while (1) {
     if (motors_ready) {
       //	gyems_motor_request_status(&motor1);
-    }
-
-    if (key_state & (1 << PINC0)) { // 10deg
-      if (get_key_press(1 << PINC1)) {
-        gyems_motor_set_multiturn_angle(&motor1, 5, motor1.angle - 10);
-      }
-      if (get_key_press(1 << PINC3)) {
-        gyems_motor_set_multiturn_angle(&motor1, 5, motor1.angle + 10);
-      }
-    } else {
-      if (get_key_press(1 << PINC1)) {
-        gyems_motor_set_multiturn_angle(&motor1, 10, 0);
-      }
-      if (key_state & (1 << PINC2)) {
-        gyems_motor_set_multiturn_angle(&motor1, 10, 5760 / 2);
-      }
-      if (get_key_press(1 << PINC3)) {
-        gyems_motor_set_multiturn_angle(&motor1, 10, 5760);
-      }
     }
 
     // gyems_motor_parse_can(&motor1,frm);
