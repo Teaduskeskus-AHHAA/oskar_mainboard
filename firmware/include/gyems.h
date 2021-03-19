@@ -23,6 +23,7 @@ typedef struct {
   uint16_t id;
   uint8_t status;
   encoder_t encoder;
+  int32_t angle;
   int64_t multiturn_angle;
   int64_t multiturn_angle_0;
   int64_t multiturn_angle_range;
