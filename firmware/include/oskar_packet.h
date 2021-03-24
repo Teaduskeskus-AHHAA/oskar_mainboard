@@ -17,7 +17,7 @@ typedef struct {
 } OskarPacket;
 
 uint8_t* getEscapedData(OskarPacket* packet);
-uint8_t* getUnescapedData(uint8_t* escaped_data);
+uint8_t* getUnescapedData(uint8_t* escaped_data, uint8_t data_size);
 uint8_t checkCRC(uint16_t expected, uint8_t* data, uint8_t data_size);
 
 #endif

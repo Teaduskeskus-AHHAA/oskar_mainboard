@@ -22,7 +22,7 @@ uint8_t *getEscapedData(OskarPacket *packet) {
 
   return result;
 }
-uint8_t *getUnescapedData(uint8_t *escaped_data) {
+uint8_t *getUnescapedData(uint8_t *escaped_data, uint8_t data_size) {
   uint8_t *result;
   uint8_t result_i = 0;
   uint8_t i = 0;

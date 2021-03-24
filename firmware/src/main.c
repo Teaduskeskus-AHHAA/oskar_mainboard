@@ -10,6 +10,7 @@
 #include <include/mcp2515.h>
 #include <include/oskar_packet.h>
 #include <include/oskar_defs.h>
+#include <include/oskar_commands.h>
 #include <include/spi.h>
 
 #define F_CPU 8000000UL
@@ -152,6 +153,19 @@ ISR(PCINT1_vect) {
   }
 }
 
+void processPacket(OskarPacket *packet) {
+  switch(packet->command) {
+    case DRIVESPEEDS_COMMAND: ; // This semicolon coaxes the C compiler into allowing a declaration immediately after a case label
+      int32_t lspeed = (int32_t)((int32_t)packet->data[4] << 24) | ((int32_t)packet->data[3] << 16) | ((int32_t)packet->data[2] << 8) | (packet->data[1]);
+      int32_t rspeed = (int32_t) ((int32_t)packet->data[9] << 24) | ((int32_t)packet->data[8] << 16) | ((int32_t)packet->data[7] << 8)| (packet->data[6]);
+      gyems_motor_set_speed(&left_wheel_motor, lspeed);
+      gyems_motor_set_speed(&right_wheel_motor, rspeed);
+      break;
+    default:
+      break;
+  }
+}
+
 int main() {
 
   /* Configure motors */
@@ -183,9 +197,9 @@ int main() {
   PORTB |= CAN_RESET_PIN;
 
   // Initialize CAN Controller or enter hard error state if that fails.
- /* if (!mcp2515_init(16, 1000000)) {
+  if (!mcp2515_init(16, 1000000)) {
     stall_can_init_error();
-  }*/
+  }
   // DDRC &= ~(1 << DDC0);
 
   // PCMSK1 |= (1 << PCINT9) | (1 << PCINT10) | (1 << PCINT11) | (1 << PCINT12)
@@ -216,15 +230,23 @@ int main() {
         uint8_t total_packet_lenght = packet_len+5;
         memcpy(&packet_buffer,&recieve_buffer[rx_packet_start],total_packet_lenght+1);
         if(packet_buffer[0] == END && packet_buffer[1] == packet_len && packet_buffer[total_packet_lenght] == END) {
-         
+                 char buffer[30];
+
           OskarPacket packet;
-          packet.command = packet_buffer[2];
+          packet.command = packet_buffer[3];
+
+          /*utoa(packet_buffer[3], buffer, 16);
+          usart_puts(buffer);
+          usart_puts("\r\n");*/
+
           packet.length = packet_len;
           packet.data_size = packet.length - 1;
           memcpy(&packet.data,&packet_buffer[4],packet.length-1);
           packet.crc = ((uint16_t) packet_buffer[total_packet_lenght-1] << 8) | packet_buffer[total_packet_lenght-2];
           if(checkCRC(packet.crc, &packet.data, packet.length-1)) {
-            PORTB |= (1 << PORTB0);
+            uint8_t* clean_data = getUnescapedData(&packet.data, packet.length-1);
+            memcpy(&packet.data,&clean_data,packet.length-1);
+            processPacket(&packet);
           }
           //usart_send(packet_buffer,total_packet_lenght);
         }
