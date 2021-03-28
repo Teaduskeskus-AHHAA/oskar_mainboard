@@ -13,6 +13,10 @@
 #include <include/oskar_commands.h>
 #include <include/spi.h>
 
+
+#include <util/crc16.h>
+
+
 #define F_CPU 8000000UL
 
 // Packet recieve defines
@@ -23,8 +27,8 @@
 #define STATE_PACKET_ENDED 3
 
 // Packet recieve global variables
-volatile uint8_t recieve_buffer[255];
-volatile uint8_t packet_buffer[255];
+volatile uint8_t recieve_buffer[128];
+volatile uint8_t packet_buffer[128];
 volatile uint8_t rxn = 0;
 volatile uint8_t packet_len = 0;
 volatile uint8_t rx_packet_start = 0;
@@ -81,7 +85,41 @@ void zero_motors() {}
 void motors_update() {
   if (motors_ready) {
     gyems_motor_request_status(&left_wheel_motor);
+    gyems_motor_request_status(&right_wheel_motor);
+
   }
+}
+
+void send_odom() {
+    cli();
+
+  uint8_t odomdata[8];
+  odomdata[0] = ((int32_t)left_wheel_motor.speed & 0xFF);
+  odomdata[1] =(((int32_t)left_wheel_motor.speed >> 8) & 0xFF);
+  odomdata[2] = (((int32_t)left_wheel_motor.speed >> 16) & 0xFF);
+  odomdata[3] = (((int32_t)left_wheel_motor.speed >> 24) & 0xFF);
+  odomdata[4] =((int32_t)right_wheel_motor.speed & 0xFF);
+  odomdata[5] =(((int32_t)right_wheel_motor.speed >> 8) & 0xFF);
+  odomdata[6] =(((int32_t)right_wheel_motor.speed >> 16) & 0xFF);
+  odomdata[7] =(((int32_t)right_wheel_motor.speed >> 24) & 0xFF);
+
+  uint8_t escapedsize;
+  uint8_t* escaped = getEscapedData(odomdata,8, &escapedsize);
+
+  uint16_t crc = 0;
+  for (uint8_t i = 0; i < escapedsize; i++) {
+    crc = _crc_ccitt_update(crc, escaped[i]);
+  }
+  uart_putc(END);
+  uart_putc(escapedsize+1);
+  uart_putc(ODOM_COMMAND);
+  for(uint8_t i = 0; i < escapedsize; i++) {
+    uart_putc(escaped[i]);
+  }
+  uart_putc(crc & 0xFF);
+  uart_putc(crc >> 8);
+  uart_putc(END);
+sei();
 }
 
 ISR(USART_RX_vect) {
@@ -121,17 +159,7 @@ void init_usart() {
   UBRR0L = 51;
 }
 
-void usart_putc(char send) {
-  while ((UCSR0A & (1 << UDRE0)) == 0) {
-  };
-  UDR0 = send;
-}
 
-void usart_puts(const char *send) {
-  while (*send) {
-    usart_putc(*send++);
-  }
-}
 
 void stall_can_init_error() {
   cli();
@@ -197,9 +225,9 @@ int main() {
   PORTB |= CAN_RESET_PIN;
 
   // Initialize CAN Controller or enter hard error state if that fails.
-  if (!mcp2515_init(16, 1000000)) {
+ /* if (!mcp2515_init(16, 1000000)) {
     stall_can_init_error();
-  }
+  }*/
   // DDRC &= ~(1 << DDC0);
 
   // PCMSK1 |= (1 << PCINT9) | (1 << PCINT10) | (1 << PCINT11) | (1 << PCINT12)
@@ -254,6 +282,8 @@ int main() {
       }
 
       motors_update();
+      send_odom();
+
 
       // gyems_motor_parse_can(&motor1,recieved_frame);
 

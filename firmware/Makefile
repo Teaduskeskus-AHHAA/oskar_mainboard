@@ -90,8 +90,8 @@ COPY = cp
 
 ELFCOFF = objtool
 
-HEXSIZE = avr-size --target=$(FORMAT) $(TARGET).hex
-ELFSIZE = avr-size -A $(TARGET).elf
+HEXSIZE = avr-size --target=$(FORMAT) $(TARGET).hex -mcu $(MCU)
+ELFSIZE = avr-size -A $(TARGET).elf --mcu=$(MCU) --format=avr
 
 FINISH = echo Errors: none
 BEGIN = echo -------- begin --------
@@ -113,8 +113,8 @@ ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
 # Default target.
-all: clean begin gccversion $(TARGET).elf $(TARGET).hex $(TARGET).eep \
-$(TARGET).lss finished end
+all: clean begin gccversion sizebefore $(TARGET).elf $(TARGET).hex $(TARGET).eep \
+$(TARGET).lss sizeafter finished end
 
 
 # Eye candy.
@@ -181,6 +181,12 @@ coff: $(TARGET).cof end
 	$(CC) -c $(ALL_ASFLAGS) $< -o $@
 
 
+# Display size of file.
+sizebefore:
+	@if [ -f $(TARGET).elf ]; then echo; echo $(MSG_SIZE_BEFORE); $(ELFSIZE); echo; fi
+
+sizeafter:
+	@if [ -f $(TARGET).elf ]; then echo; echo $(MSG_SIZE_AFTER); $(ELFSIZE); echo; fi
 
 
 

@@ -2,6 +2,6 @@
 #define OSKAR_COMMANDS_H
 
 #define DRIVESPEEDS_COMMAND 0x01
-#define ODOM_COMMAND 0x20
+#define ODOM_COMMAND 0x02
 
 #endif
