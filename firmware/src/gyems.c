@@ -66,6 +66,7 @@ void gyems_motor_parse_can(gyems_motor *motor, can_frame_t *frame) {
 }
 
 void gyems_motor_set_speed(gyems_motor *motor, int32_t speed) {
+  motor->speed = speed;
   speed = speed * 100;
   can_frame_t frm;
   // Motor status 1
@@ -78,7 +79,7 @@ void gyems_motor_set_speed(gyems_motor *motor, int32_t speed) {
   frm.data[6] = *((uint8_t *)(&speed) + 2);
   frm.data[7] = *((uint8_t *)(&speed) + 3);
 
-  mcp2515_send(&frm);
+ // mcp2515_send(&frm);
 }
 
 void gyems_motor_find_endpoints(gyems_motor *motor) {

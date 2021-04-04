@@ -243,4 +243,4 @@ writefuse:
 	avrdude -p $(AVRDUDEMCU) -U lfuse:w:0xc3:m
 
 program:
-	avrdude -c usbasp -p $(AVRDUDEMCU) -U flash:w:$(TARGET).hex -U lfuse:w:0xE2:m -U hfuse:w:0xD9:m -B 3
+	avrdude -c usbasp -p $(AVRDUDEMCU) -U flash:w:$(TARGET).hex -U lfuse:w:0xD6:m -U hfuse:w:0xDE:m -B 3

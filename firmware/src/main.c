@@ -17,7 +17,7 @@
 #include <util/crc16.h>
 
 
-#define F_CPU 8000000UL
+#define F_CPU 20000000UL
 
 // Packet recieve defines
 
@@ -132,17 +132,15 @@ ISR(USART_RX_vect) {
     state = STATE_PACKET_STARTED;
     rxn++;
   }
-  if ((state == STATE_PACKET_STARTED) && (recv != END)) { // Lenght byte
-    if (recieve_buffer[rxn - 1] == END) {
-      packet_len = recv;
+  if ((state == STATE_PACKET_STARTED) && (recv != END)) { 
+    if (recieve_buffer[rxn - 1] == END) { // Lenght byte
+      packet_len = recv; 
       state = STATE_PACKET_STREAMING;
     }
     rxn++;
-  }
-  if ((state == STATE_PACKET_STREAMING) && (recv != END)) {
+  } else if ((state == STATE_PACKET_STREAMING) && (recv != END)) {
     rxn++;
-  }
-  if ((state == STATE_PACKET_STREAMING) && (recv == END)) {
+  } else if ((state == STATE_PACKET_STREAMING) && (recv == END)) {
     rxn = 0;
     state = STATE_PACKET_ENDED;
   }
@@ -155,8 +153,7 @@ void init_usart() {
   DDRD &= ~(1 << PIND0);
   UCSR0B |= (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0);
   UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01);
-  UBRR0H = 0;
-  UBRR0L = 51;
+  UBRR0 = 10;
 }
 
 
@@ -182,12 +179,16 @@ ISR(PCINT1_vect) {
 }
 
 void processPacket(OskarPacket *packet) {
+
   switch(packet->command) {
     case DRIVESPEEDS_COMMAND: ; // This semicolon coaxes the C compiler into allowing a declaration immediately after a case label
-      int32_t lspeed = (int32_t)((int32_t)packet->data[4] << 24) | ((int32_t)packet->data[3] << 16) | ((int32_t)packet->data[2] << 8) | (packet->data[1]);
-      int32_t rspeed = (int32_t) ((int32_t)packet->data[9] << 24) | ((int32_t)packet->data[8] << 16) | ((int32_t)packet->data[7] << 8)| (packet->data[6]);
-      gyems_motor_set_speed(&left_wheel_motor, lspeed);
-      gyems_motor_set_speed(&right_wheel_motor, rspeed);
+
+      int32_t lspeed = (int32_t)((int32_t)packet->data[3] << 24) | ((int32_t)packet->data[2] << 16) | ((int32_t)packet->data[1] << 8) | (packet->data[0]);
+      int32_t rspeed = (int32_t) ((int32_t)packet->data[7] << 24) | ((int32_t)packet->data[6] << 16) | ((int32_t)packet->data[5] << 8)| (packet->data[4]);
+      //gyems_motor_set_speed(&left_wheel_motor, lspeed);
+     // gyems_motor_set_speed(&right_wheel_motor, rspeed);
+      left_wheel_motor.speed = lspeed;
+      right_wheel_motor.speed = rspeed;
       break;
     default:
       break;
@@ -252,37 +253,53 @@ int main() {
   // gyems_motor_set_multiturn_angle(&motor1, 10, 5760 / 2);
 
   while (1) {
-
     if(state == STATE_PACKET_ENDED) {
-       
+
         uint8_t total_packet_lenght = packet_len+5;
-        memcpy(&packet_buffer,&recieve_buffer[rx_packet_start],total_packet_lenght+1);
-        if(packet_buffer[0] == END && packet_buffer[1] == packet_len && packet_buffer[total_packet_lenght] == END) {
-                 char buffer[30];
+        memcpy(&packet_buffer,&recieve_buffer[rx_packet_start],total_packet_lenght);
+
+        if((packet_buffer[0] == END) && (packet_buffer[1] == packet_len) && (packet_buffer[total_packet_lenght-1] == END)) {
+                         PORTB |= (1 << PB0);
 
           OskarPacket packet;
-          packet.command = packet_buffer[3];
+          packet.command = packet_buffer[2];
 
-          /*utoa(packet_buffer[3], buffer, 16);
-          usart_puts(buffer);
-          usart_puts("\r\n");*/
-
+          
           packet.length = packet_len;
           packet.data_size = packet.length - 1;
-          memcpy(&packet.data,&packet_buffer[4],packet.length-1);
+          memcpy(&packet.data,&packet_buffer[3],packet.length);
           packet.crc = ((uint16_t) packet_buffer[total_packet_lenght-1] << 8) | packet_buffer[total_packet_lenght-2];
           if(checkCRC(packet.crc, &packet.data, packet.length-1)) {
             uint8_t* clean_data = getUnescapedData(&packet.data, packet.length-1);
-            memcpy(&packet.data,&clean_data,packet.length-1);
+            *packet.data = *clean_data;
             processPacket(&packet);
+            
           }
           //usart_send(packet_buffer,total_packet_lenght);
+        } else {
+                      uart_putc('\r');
+            uart_putc('\n');
+           uart_puts("=====================");
+            uart_putc('\r');
+            uart_putc('\n');
+          for(int i = 0; i < total_packet_lenght; i++) {
+            char buf[30];
+            utoa(packet_buffer[i], buf, 16);
+            uart_puts(buf);
+            uart_putc('\r');
+            uart_putc('\n');
+             
+          }
+            uart_puts("=====================");
+            uart_putc('\r');
+            uart_putc('\n');
         }
         state = STATE_IDLE;
       }
 
-      motors_update();
-      send_odom();
+  //    motors_update();
+    // send_odom();
+                   PORTB &= ~(1 << PB0);
 
 
       // gyems_motor_parse_can(&motor1,recieved_frame);
