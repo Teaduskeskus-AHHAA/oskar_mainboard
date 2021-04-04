@@ -56,13 +56,14 @@ void configure_motors() {
   left_wheel_motor.endpoint_speed = motors_zeroing_speed;
   left_wheel_motor.multiturn_angle_range = 0; // doesn't matter
   left_wheel_motor.endpoints_found = 1;
+  left_wheel_motor.speed = 2046;
 
   right_wheel_motor.id = 0x142;
   right_wheel_motor.operating_mode = MOTOR_OPMODE_MULTITURN;
   right_wheel_motor.endpoint_speed = motors_zeroing_speed;
   right_wheel_motor.multiturn_angle_range = 0; // doesn't matter
   right_wheel_motor.endpoints_found = 1;
-
+  right_wheel_motor.speed =2046;
   /*motor1.id = 0x141;
   motor1.operating_mode = 1; // Multiturn
   motor1.endpoint_speed = 200;
@@ -80,7 +81,9 @@ void motors_parse_can_msg() {
   gyems_motor_parse_can(&right_wheel_motor, &recieved_can_frame);
 }
 
-void zero_motors() {}
+void zero_motors() {
+  motors_ready = 1;
+}
 
 void motors_update() {
   if (motors_ready) {
@@ -92,8 +95,6 @@ void motors_update() {
 
 void send_odom() {
   uint8_t odomdata[8];
-  left_wheel_motor.speed = 2046;
-  right_wheel_motor.speed = 2020;
 
 
   odomdata[0] = *(uint8_t *)(&left_wheel_motor.speed);
@@ -108,7 +109,7 @@ void send_odom() {
   uint8_t result[255];
   uint8_t result_i;
 
-  for (uint8_t i = 0; i < sizeof(odomdata) / sizeof(uint8_t); i++) {
+  for (uint8_t i = 0; i < 8; i++) {
     if (odomdata[i] == END) {
       result[result_i] = ESC;
       result[result_i + 1] = ESC_END;
@@ -317,6 +318,7 @@ int main() {
       }
 
   //    motors_update();
+    
      send_odom();
                    PORTB &= ~(1 << PB0);
 
