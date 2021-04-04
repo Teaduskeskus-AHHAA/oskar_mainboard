@@ -92,15 +92,52 @@ void motors_update() {
 
 void send_odom() {
   uint8_t odomdata[8];
-  odomdata[0] = ((int32_t)left_wheel_motor.speed & 0xFF);
-  odomdata[1] =(((int32_t)left_wheel_motor.speed >> 8) & 0xFF);
-  odomdata[2] = (((int32_t)left_wheel_motor.speed >> 16) & 0xFF);
-  odomdata[3] = (((int32_t)left_wheel_motor.speed >> 24) & 0xFF);
-  odomdata[4] =((int32_t)right_wheel_motor.speed & 0xFF);
-  odomdata[5] =(((int32_t)right_wheel_motor.speed >> 8) & 0xFF);
-  odomdata[6] =(((int32_t)right_wheel_motor.speed >> 16) & 0xFF);
-  odomdata[7] =(((int32_t)right_wheel_motor.speed >> 24) & 0xFF);
+  left_wheel_motor.speed = 2046;
+  right_wheel_motor.speed = 2020;
 
+
+  odomdata[0] = *(uint8_t *)(&left_wheel_motor.speed);
+  odomdata[1] = *((uint8_t *)(&left_wheel_motor.speed) +1);
+  odomdata[2] = *((uint8_t *)(&left_wheel_motor.speed) +2);
+  odomdata[3] = *((uint8_t *)(&left_wheel_motor.speed) +3);
+  odomdata[4] = *(uint8_t *)(&right_wheel_motor.speed);
+  odomdata[5] = *((uint8_t *)(&right_wheel_motor.speed)+1);
+  odomdata[6] = *((uint8_t *)(&right_wheel_motor.speed)+2);
+  odomdata[7] = *((uint8_t *)(&right_wheel_motor.speed)+3);
+
+  uint8_t result[255];
+  uint8_t result_i;
+
+  for (uint8_t i = 0; i < sizeof(odomdata) / sizeof(uint8_t); i++) {
+    if (odomdata[i] == END) {
+      result[result_i] = ESC;
+      result[result_i + 1] = ESC_END;
+      result_i += 2;
+    } else if (odomdata[i] == ESC) {
+      result[result_i] = ESC;
+      result[result_i + 1] = ESC_ESC;
+      result_i += 2;
+    } else {
+      result[result_i] = odomdata[i];
+      result_i++;
+    }
+  }
+
+  uint16_t crc = 0;
+  for (uint8_t i = 0; i < result_i; i++) {
+    crc = _crc_ccitt_update(crc, result[i]);
+  }
+
+  uart_putc(END);
+  uart_putc(result_i+1);
+  uart_putc(ODOM_COMMAND);
+  for(uint8_t i = 0; i < result_i; i++) {
+    uart_putc(result[i]);
+  }
+  uart_putc(crc & 0xFF);
+  uart_putc(crc >> 8);
+  uart_putc(END);
+/*
   uint8_t escapedsize;
   uint8_t* escaped = getEscapedData(odomdata,8, &escapedsize);
 
@@ -116,7 +153,7 @@ void send_odom() {
   }
   uart_putc(crc & 0xFF);
   uart_putc(crc >> 8);
-  uart_putc(END);
+  uart_putc(END);*/
 }
 
 ISR(USART_RX_vect) {
