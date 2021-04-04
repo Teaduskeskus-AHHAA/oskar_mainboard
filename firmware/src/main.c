@@ -33,7 +33,7 @@ volatile uint8_t rxn = 0;
 volatile uint8_t packet_len = 0;
 volatile uint8_t rx_packet_start = 0;
 
-uint8_t state = STATE_IDLE;
+volatile uint8_t state = STATE_IDLE;
 
 // Global variables
 can_frame_t recieved_can_frame;
@@ -56,14 +56,14 @@ void configure_motors() {
   left_wheel_motor.endpoint_speed = motors_zeroing_speed;
   left_wheel_motor.multiturn_angle_range = 0; // doesn't matter
   left_wheel_motor.endpoints_found = 1;
-  left_wheel_motor.speed = 2046;
+  left_wheel_motor.speed =0;
 
   right_wheel_motor.id = 0x142;
   right_wheel_motor.operating_mode = MOTOR_OPMODE_MULTITURN;
   right_wheel_motor.endpoint_speed = motors_zeroing_speed;
   right_wheel_motor.multiturn_angle_range = 0; // doesn't matter
   right_wheel_motor.endpoints_found = 1;
-  right_wheel_motor.speed =2046;
+  right_wheel_motor.speed =0;
   /*motor1.id = 0x141;
   motor1.operating_mode = 1; // Multiturn
   motor1.endpoint_speed = 200;
@@ -92,9 +92,9 @@ void motors_update() {
 
   }
 }
+  uint8_t odomdata[8];
 
 void send_odom() {
-  uint8_t odomdata[8];
 
 
   odomdata[0] = *(uint8_t *)(&left_wheel_motor.speed);
@@ -316,10 +316,13 @@ int main() {
         
         state = STATE_IDLE;
       }
-
-  //    motors_update();
-    
+  if(state == STATE_IDLE) {
      send_odom();
+
+  }
+  //    motors_update();
+
+    
                    PORTB &= ~(1 << PB0);
 
 
