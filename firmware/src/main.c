@@ -91,8 +91,6 @@ void motors_update() {
 }
 
 void send_odom() {
-    cli();
-
   uint8_t odomdata[8];
   odomdata[0] = ((int32_t)left_wheel_motor.speed & 0xFF);
   odomdata[1] =(((int32_t)left_wheel_motor.speed >> 8) & 0xFF);
@@ -119,7 +117,6 @@ void send_odom() {
   uart_putc(crc & 0xFF);
   uart_putc(crc >> 8);
   uart_putc(END);
-sei();
 }
 
 ISR(USART_RX_vect) {
@@ -259,7 +256,6 @@ int main() {
         memcpy(&packet_buffer,&recieve_buffer[rx_packet_start],total_packet_lenght);
 
         if((packet_buffer[0] == END) && (packet_buffer[1] == packet_len) && (packet_buffer[total_packet_lenght-1] == END)) {
-                         PORTB |= (1 << PB0);
 
           OskarPacket packet;
           packet.command = packet_buffer[2];
@@ -268,37 +264,23 @@ int main() {
           packet.length = packet_len;
           packet.data_size = packet.length - 1;
           memcpy(&packet.data,&packet_buffer[3],packet.length);
-          packet.crc = ((uint16_t) packet_buffer[total_packet_lenght-1] << 8) | packet_buffer[total_packet_lenght-2];
+          packet.crc = ((uint16_t) packet_buffer[total_packet_lenght-2] << 8) | packet_buffer[total_packet_lenght-3];
           if(checkCRC(packet.crc, &packet.data, packet.length-1)) {
+                                     PORTB |= (1 << PB0);
+
             uint8_t* clean_data = getUnescapedData(&packet.data, packet.length-1);
             *packet.data = *clean_data;
             processPacket(&packet);
             
           }
           //usart_send(packet_buffer,total_packet_lenght);
-        } else {
-                      uart_putc('\r');
-            uart_putc('\n');
-           uart_puts("=====================");
-            uart_putc('\r');
-            uart_putc('\n');
-          for(int i = 0; i < total_packet_lenght; i++) {
-            char buf[30];
-            utoa(packet_buffer[i], buf, 16);
-            uart_puts(buf);
-            uart_putc('\r');
-            uart_putc('\n');
-             
-          }
-            uart_puts("=====================");
-            uart_putc('\r');
-            uart_putc('\n');
         }
+        
         state = STATE_IDLE;
       }
 
   //    motors_update();
-    // send_odom();
+     send_odom();
                    PORTB &= ~(1 << PB0);
 
 
