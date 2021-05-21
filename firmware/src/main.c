@@ -1,54 +1,197 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
-#include <include/gyems.h>
-#include <include/mcp2515.h>
-#include <include/spi.h>
-
-#define F_CPU 8000000UL
-#include <include/oskar_defs.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <util/delay.h>
 
-can_frame_t can_frame;
-uint8_t can_frame_ready = 0;
+#include <include/gyems.h>
+#include <include/mcp2515.h>
+#include <include/oskar_packet.h>
+#include <include/oskar_defs.h>
+#include <include/oskar_commands.h>
+#include <include/spi.h>
 
-volatile gyems_motor motor1;
-can_frame_t frm;
-char buffer[30];
 
+#include <util/crc16.h>
+
+
+#define F_CPU 20000000UL
+
+// Packet recieve defines
+
+#define STATE_IDLE 0
+#define STATE_PACKET_STARTED 1
+#define STATE_PACKET_STREAMING 2
+#define STATE_PACKET_ENDED 3
+
+// Packet recieve global variables
+volatile uint8_t recieve_buffer[128];
+volatile uint8_t packet_buffer[128];
+volatile uint8_t rxn = 0;
+volatile uint8_t packet_len = 0;
+volatile uint8_t rx_packet_start = 0;
+
+volatile uint8_t state = STATE_IDLE;
+
+// Global variables
+can_frame_t recieved_can_frame;
 uint8_t motors_ready = 0;
 
-#define KEY_PIN PINC
+uint8_t motors_zeroing_speed = 200;
+
+// Motor instances
+// When adding a motor - declare it here, add configuration to
+// configure_motors(), add CAN frame parsing to motors_parse_can_msg(), add
+// endpoint search to zero_motors(), add update to motors_update
+volatile gyems_motor left_wheel_motor;
+volatile gyems_motor right_wheel_motor;
+volatile gyems_motor squat_motor;
+volatile gyems_motor motor1;
+
+void configure_motors() {
+  left_wheel_motor.id = 0x141;
+  left_wheel_motor.operating_mode = MOTOR_OPMODE_MULTITURN;
+  left_wheel_motor.endpoint_speed = motors_zeroing_speed;
+  left_wheel_motor.multiturn_angle_range = 0; // doesn't matter
+  left_wheel_motor.endpoints_found = 1;
+  left_wheel_motor.speed =0;
+
+  right_wheel_motor.id = 0x142;
+  right_wheel_motor.operating_mode = MOTOR_OPMODE_MULTITURN;
+  right_wheel_motor.endpoint_speed = motors_zeroing_speed;
+  right_wheel_motor.multiturn_angle_range = 0; // doesn't matter
+  right_wheel_motor.endpoints_found = 1;
+  right_wheel_motor.speed =0;
+  /*motor1.id = 0x141;
+  motor1.operating_mode = 1; // Multiturn
+  motor1.endpoint_speed = 200;
+  motor1.multiturn_angle_range = -5760;
+  motor1.endpoints_found = 0;
+  motor1.endpoint_1_port = &PORTD;
+  motor1.endpoint_2_port = &PORTD;
+  motor1.endpoint_1_pin = 7;
+  motor1.endpoint_2_pin = 5;
+  motor1.angle = 0;*/
+}
+
+void motors_parse_can_msg() {
+  gyems_motor_parse_can(&left_wheel_motor, &recieved_can_frame);
+  gyems_motor_parse_can(&right_wheel_motor, &recieved_can_frame);
+}
+
+void zero_motors() {
+  motors_ready = 1;
+}
+
+void motors_update() {
+  if (motors_ready) {
+    gyems_motor_request_status(&left_wheel_motor);
+    gyems_motor_request_status(&right_wheel_motor);
+
+  }
+}
+  uint8_t odomdata[8];
+
+void send_odom() {
+
+
+  odomdata[0] = *(uint8_t *)(&left_wheel_motor.speed);
+  odomdata[1] = *((uint8_t *)(&left_wheel_motor.speed) +1);
+  odomdata[2] = *((uint8_t *)(&left_wheel_motor.speed) +2);
+  odomdata[3] = *((uint8_t *)(&left_wheel_motor.speed) +3);
+  odomdata[4] = *(uint8_t *)(&right_wheel_motor.speed);
+  odomdata[5] = *((uint8_t *)(&right_wheel_motor.speed)+1);
+  odomdata[6] = *((uint8_t *)(&right_wheel_motor.speed)+2);
+  odomdata[7] = *((uint8_t *)(&right_wheel_motor.speed)+3);
+
+  uint8_t result[255];
+  uint8_t result_i;
+
+  for (uint8_t i = 0; i < 8; i++) {
+    if (odomdata[i] == END) {
+      result[result_i] = ESC;
+      result[result_i + 1] = ESC_END;
+      result_i += 2;
+    } else if (odomdata[i] == ESC) {
+      result[result_i] = ESC;
+      result[result_i + 1] = ESC_ESC;
+      result_i += 2;
+    } else {
+      result[result_i] = odomdata[i];
+      result_i++;
+    }
+  }
+
+  uint16_t crc = 0;
+  for (uint8_t i = 0; i < result_i; i++) {
+    crc = _crc_ccitt_update(crc, result[i]);
+  }
+
+  uart_putc(END);
+  uart_putc(result_i+1);
+  uart_putc(ODOM_COMMAND);
+  for(uint8_t i = 0; i < result_i; i++) {
+    uart_putc(result[i]);
+  }
+  uart_putc(crc & 0xFF);
+  uart_putc(crc >> 8);
+  uart_putc(END);
+/*
+  uint8_t escapedsize;
+  uint8_t* escaped = getEscapedData(odomdata,8, &escapedsize);
+
+  uint16_t crc = 0;
+  for (uint8_t i = 0; i < escapedsize; i++) {
+    crc = _crc_ccitt_update(crc, escaped[i]);
+  }
+  uart_putc(END);
+  uart_putc(escapedsize+1);
+  uart_putc(ODOM_COMMAND);
+  for(uint8_t i = 0; i < escapedsize; i++) {
+    uart_putc(escaped[i]);
+  }
+  uart_putc(crc & 0xFF);
+  uart_putc(crc >> 8);
+  uart_putc(END);*/
+}
+
+ISR(USART_RX_vect) {
+  while (!(UCSR0A & (1 << RXC0))) {
+  };
+  uint8_t recv = UDR0;
+  recieve_buffer[rxn] = recv;
+  if ((state == STATE_IDLE) && (recv == END)) { // Packet start
+    rx_packet_start = rxn;
+    state = STATE_PACKET_STARTED;
+    rxn++;
+  }
+  if ((state == STATE_PACKET_STARTED) && (recv != END)) { 
+    if (recieve_buffer[rxn - 1] == END) { // Lenght byte
+      packet_len = recv; 
+      state = STATE_PACKET_STREAMING;
+    }
+    rxn++;
+  } else if ((state == STATE_PACKET_STREAMING) && (recv != END)) {
+    rxn++;
+  } else if ((state == STATE_PACKET_STREAMING) && (recv == END)) {
+    rxn = 0;
+    state = STATE_PACKET_ENDED;
+  }
+}
 
 void init_usart() {
   CLKPR = 128;
   CLKPR = 0;
   DDRD |= (1 << PIND1);
   DDRD &= ~(1 << PIND0);
-  UCSR0B |= (1 << TXEN0) |
-            (1 << RXEN0); // Turn on the transmission and reception circuitry
-  UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01); // Use 8-bit character sizes
-  UBRR0H = 0;
-  UBRR0L = 51;
+  UCSR0B |= (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0);
+  UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01);
+  UBRR0 = 10;
 }
 
-void usart_putc(char send) {
-  // Do nothing for a bit if there is already
-  // data waiting in the hardware to be sent
-  while ((UCSR0A & (1 << UDRE0)) == 0) {
-  };
-  UDR0 = send;
-}
 
-void usart_puts(const char *send) {
-  // Cycle through each character individually
-  while (*send) {
-    usart_putc(*send++);
-  }
-}
 
 void stall_can_init_error() {
   cli();
@@ -62,62 +205,37 @@ void stall_can_init_error() {
 
 ISR(PCINT1_vect) {
   if (!(PINC & (1 << PINC5))) {
-    mcp2515_read(0, &frm);
-    gyems_motor_parse_can(&motor1, &frm);
+    mcp2515_read(0, &recieved_can_frame);
+    motors_parse_can_msg();
   } else if (!(PINC & (1 << PINC4))) {
-    mcp2515_read(1, &frm);
-    gyems_motor_parse_can(&motor1, &frm);
+    mcp2515_read(1, &recieved_can_frame);
+    motors_parse_can_msg();
   }
 }
 
-uint8_t key_state; // debounced and inverted key state:
-                   // bit = 1: key pressed
-uint8_t key_press; // key press detect
+void processPacket(OskarPacket *packet) {
 
-ISR(TIMER0_COMPA_vect) // every 10ms
-{
-  static uint8_t ct0 = 0xFF, ct1 = 0xFF; // 8 * 2bit counters
-  uint8_t i;
+  switch(packet->command) {
+    case DRIVESPEEDS_COMMAND: ; // This semicolon coaxes the C compiler into allowing a declaration immediately after a case label
 
-  i = ~KEY_PIN;               // read keys (low active)
-  i ^= key_state;             // key changed ?
-  ct0 = ~(ct0 & i);           // reset or count ct0
-  ct1 = ct0 ^ (ct1 & i);      // reset or count ct1
-  i &= ct0 & ct1;             // count until roll over ?
-  key_state ^= i;             // then toggle debounced state
-  key_press |= key_state & i; // 0->1: key press detect
-}
-
-uint8_t get_key_press(uint8_t key_mask) {
-  cli();                 // read and clear atomic !
-  key_mask &= key_press; // read key(s)
-  key_press ^= key_mask; // clear key(s)
-  sei();
-  return key_mask;
+      int32_t lspeed = (int32_t)((int32_t)packet->data[3] << 24) | ((int32_t)packet->data[2] << 16) | ((int32_t)packet->data[1] << 8) | (packet->data[0]);
+      int32_t rspeed = (int32_t) ((int32_t)packet->data[7] << 24) | ((int32_t)packet->data[6] << 16) | ((int32_t)packet->data[5] << 8)| (packet->data[4]);
+      //gyems_motor_set_speed(&left_wheel_motor, lspeed);
+     // gyems_motor_set_speed(&right_wheel_motor, rspeed);
+      left_wheel_motor.speed = lspeed;
+      right_wheel_motor.speed = rspeed;
+      break;
+    default:
+      break;
+  }
 }
 
 int main() {
-  TCCR0A = 1 << WGM01;                // T0 Mode 2: CTC
-  TCCR0B = 1 << CS02 ^ 1 << CS00;     // divide by 1024
-  OCR0A = F_CPU / 1024.0 * 10e-3 - 1; // 10ms
-  TIMSK0 = 1 << OCIE0A;
-  key_state = ~KEY_PIN; // no action on keypress during reset
-  /* Define motors */
 
-  motor1.id = 0x141;
-  motor1.operating_mode = 1; // Multiturn
-  motor1.endpoint_speed = 200;
-  motor1.multiturn_angle_range = -5760;
-  motor1.endpoints_found = 0;
-  motor1.endpoint_1_port = &PORTD;
-  motor1.endpoint_2_port = &PORTD;
-  motor1.endpoint_1_pin = 7;
-  motor1.endpoint_2_pin = 5;
-  motor1.angle = 0;
+  /* Configure motors */
+  configure_motors();
 
-  /* Start motor-related IO conf */
-
-  *(motor1.endpoint_1_port - 1) &= ~(1 << motor1.endpoint_1_pin);
+  // *(motor1.endpoint_1_port - 1) &= ~(1 << motor1.endpoint_1_pin);
   //*(motor1.endpoint_2_port-1) &= ~(1 << motor1.endpoint_2_pin);
 
   /* Start Board IO conf */
@@ -141,58 +259,77 @@ int main() {
   PORTB &= ~CAN_RESET_PIN;
   _delay_ms(100);
   PORTB |= CAN_RESET_PIN;
-  // Initialize CAN Controller or enter hard error state if that fails.
-  if (!mcp2515_init(16, 1000000)) {
-    stall_can_init_error();
-  }
-  DDRC &= ~(1 << DDC0);
 
-  PCMSK1 |= (1 << PCINT9) | (1 << PCINT10) | (1 << PCINT11) | (1 << PCINT12) |
-            (1 << PCINT13);
-  PCICR |= (1 << PCIE1);
+  // Initialize CAN Controller or enter hard error state if that fails.
+ /* if (!mcp2515_init(16, 1000000)) {
+    stall_can_init_error();
+  }*/
+  // DDRC &= ~(1 << DDC0);
+
+  // PCMSK1 |= (1 << PCINT9) | (1 << PCINT10) | (1 << PCINT11) | (1 << PCINT12)
+  // |(1 << PCINT13);
+  // PCICR |= (1 << PCIE1);
   /* End Initialize peripheral systems */
   _delay_ms(100);
 
   sei();
-  _delay_ms(500);
+
+  zero_motors();
+
+  //_delay_ms(500);
   //	usart_puts("OSKAR\r\n");
 
   //	gyems_motor_request_status(&motor1);
   // gyems_motor_set_speed(&motor1,0);
-  gyems_motor_find_endpoints(&motor1);
+  // gyems_motor_find_endpoints(&motor1);
 
-  motors_ready = 1;
-  _delay_ms(1000);
-  gyems_motor_set_multiturn_angle(&motor1, 10, 5760 / 2);
+  // motors_ready = 1;
+  //_delay_ms(1000);
+  // gyems_motor_set_multiturn_angle(&motor1, 10, 5760 / 2);
 
   while (1) {
-    if (motors_ready) {
-      //	gyems_motor_request_status(&motor1);
-    }
+    if(state == STATE_PACKET_ENDED) {
 
-    if (key_state & (1 << PINC0)) { // 10deg
-      if (get_key_press(1 << PINC1)) {
-        gyems_motor_set_multiturn_angle(&motor1, 5, motor1.angle - 10);
-      }
-      if (get_key_press(1 << PINC3)) {
-        gyems_motor_set_multiturn_angle(&motor1, 5, motor1.angle + 10);
-      }
-    } else {
-      if (get_key_press(1 << PINC1)) {
-        gyems_motor_set_multiturn_angle(&motor1, 10, 0);
-      }
-      if (key_state & (1 << PINC2)) {
-        gyems_motor_set_multiturn_angle(&motor1, 10, 5760 / 2);
-      }
-      if (get_key_press(1 << PINC3)) {
-        gyems_motor_set_multiturn_angle(&motor1, 10, 5760);
-      }
-    }
+        uint8_t total_packet_lenght = packet_len+5;
+        memcpy(&packet_buffer,&recieve_buffer[rx_packet_start],total_packet_lenght);
 
-    // gyems_motor_parse_can(&motor1,frm);
+        if((packet_buffer[0] == END) && (packet_buffer[1] == packet_len) && (packet_buffer[total_packet_lenght-1] == END)) {
 
-    //	usart_puts("\r\n");
+          OskarPacket packet;
+          packet.command = packet_buffer[2];
+
+          
+          packet.length = packet_len;
+          packet.data_size = packet.length - 1;
+          memcpy(&packet.data,&packet_buffer[3],packet.length);
+          packet.crc = ((uint16_t) packet_buffer[total_packet_lenght-2] << 8) | packet_buffer[total_packet_lenght-3];
+          if(checkCRC(packet.crc, &packet.data, packet.length-1)) {
+                                     PORTB |= (1 << PB0);
+
+            uint8_t* clean_data = getUnescapedData(&packet.data, packet.length-1);
+            *packet.data = *clean_data;
+            processPacket(&packet);
+            
+          }
+          //usart_send(packet_buffer,total_packet_lenght);
+        }
+        
+        state = STATE_IDLE;
+      }
+  if(state == STATE_IDLE) {
+     send_odom();
+
   }
+  //    motors_update();
+
+    
+                   PORTB &= ~(1 << PB0);
+
+
+      // gyems_motor_parse_can(&motor1,recieved_frame);
+
+      //	usart_puts("\r\n");
+    }
 
   return 0;
 }

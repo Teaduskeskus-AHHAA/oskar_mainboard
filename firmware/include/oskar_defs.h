@@ -4,4 +4,7 @@
 
 #define CAN_RESET_PIN (1 << PB1)
 #define CAN_RESET_DDR (1 << DDB1);
+
+#define MOTOR_OPMODE_MULTITURN 1
+
 #endif
