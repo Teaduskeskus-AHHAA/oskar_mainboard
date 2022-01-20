@@ -304,11 +304,51 @@ int main() {
           memcpy(&packet.data,&packet_buffer[3],packet.length);
           packet.crc = ((uint16_t) packet_buffer[total_packet_lenght-2] << 8) | packet_buffer[total_packet_lenght-3];
           if(checkCRC(packet.crc, &packet.data, packet.length-1)) {
-                                     PORTB |= (1 << PB0);
+            uint8_t unescaped[255];
+            uint8_t unescaped_i = 0;
+            uint8_t i = 0;
 
-            uint8_t* clean_data = getUnescapedData(&packet.data, packet.length-1);
-            *packet.data = *clean_data;
+            while(i < sizeof(packet.data)) {
+              PORTB |= (1 << PB0);
+              if(packet.data[i] != ESC) {
+                unescaped[unescaped_i] = packet.data[i];
+                i++;
+              } else {
+                if (packet.data[i + 1] == ESC_END) {
+                  unescaped[unescaped_i] = END;
+                } else if (packet.data[i + 1] == ESC_ESC) {
+                  unescaped[unescaped_i] = ESC;
+                }
+                i += 2;
+              }
+              unescaped_i++;
+            }
+
+            memcpy(&packet.data,&unescaped,unescaped_i);
             processPacket(&packet);
+                                
+  /*        uint8_t *result;
+  uint8_t result_i = 0;
+  uint8_t i = 0;
+  while (i < sizeof(escaped_data) / sizeof(uint8_t)) {
+    if (escaped_data[i] != ESC) {
+      result[result_i] = escaped_data[i];
+      i++;
+    } else {
+      if (escaped_data[i + 1] == ESC_END) {
+        result[result_i] = END;
+      } else if (escaped_data[i + 1] == ESC_ESC) {
+        result[result_i] = ESC;
+      }
+      i += 2;
+    }
+    result_i++;
+  }
+  return result;*/
+
+          /*uint8_t* clean_data = getUnescapedData(&packet.data, packet.length-1);
+            *packet.data = *clean_data;
+            processPacket(&packet);*/
             
           }
           //usart_send(packet_buffer,total_packet_lenght);
@@ -316,10 +356,9 @@ int main() {
         
         state = STATE_IDLE;
       }
-  if(state == STATE_IDLE) {
      send_odom();
 
-  }
+  
   //    motors_update();
 
     

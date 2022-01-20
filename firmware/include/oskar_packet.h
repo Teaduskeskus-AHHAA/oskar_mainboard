@@ -13,7 +13,7 @@ typedef struct {
   uint8_t data_size;
   uint16_t crc;
   uint8_t data_size_escaped;
-  uint8_t data[];
+  uint8_t data[255];
 
 } OskarPacket;
 
